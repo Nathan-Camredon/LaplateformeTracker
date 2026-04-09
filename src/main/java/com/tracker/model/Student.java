@@ -7,10 +7,10 @@ public class Student {
     private int age;
     private double average;
 
-    // Constructeur vide
+    // Default constructor
     public Student() {}
 
-    // Constructeur complet
+    // Full constructor
     public Student(int id, String firstName, String lastName, int age, double average) {
         this.id = id;
         this.firstName = firstName;
@@ -19,7 +19,7 @@ public class Student {
         this.average = average;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

@@ -23,7 +23,7 @@ public class ExportServiceTest {
         String result = exportService.exportStudentsToCSV(students);
         
         String expectedHeader = "id,firstName,lastName,age,average\n";
-        assertEquals(expectedHeader, result, "L'export d'une liste vide ne doit retourner que l'en-tête.");
+        assertEquals(expectedHeader, result, "Exporting an empty list should only return the header.");
     }
 
     @Test
@@ -31,7 +31,7 @@ public class ExportServiceTest {
         String result = exportService.exportStudentsToCSV(null);
         
         String expectedHeader = "id,firstName,lastName,age,average\n";
-        assertEquals(expectedHeader, result, "L'export d'une liste null ne doit retourner que l'en-tête.");
+        assertEquals(expectedHeader, result, "Exporting a null list should only return the header.");
     }
 
     @Test
@@ -54,10 +54,10 @@ public class ExportServiceTest {
 
         String result = exportService.exportStudentsToCSV(students);
 
-        // Vérifie l'échappement par guillemets pour la virgule
-        assertTrue(result.contains("1,John,\"Doe, Jr.\",20,15.0"), "La virgule doit être entourée de guillemets.");
+        // Check for double quote escaping for commas
+        assertTrue(result.contains("1,John,\"Doe, Jr.\",20,15.0"), "The comma should be surrounded by quotes.");
         
-        // Vérifie l'échappement des guillemets (doit être doublé)
-        assertTrue(result.contains("2,Jane,\"Quote\"\"Name\",21,17.5"), "Le guillemet doit être doublé.");
+        // Check for double quote escaping (should be doubled)
+        assertTrue(result.contains("2,Jane,\"Quote\"\"Name\",21,17.5"), "The quote should be doubled.");
     }
 }

@@ -72,7 +72,7 @@ public class StudentService {
 
             connection.close();
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des étudiants : " + e.getMessage());
+            System.out.println("Error while retrieving students: " + e.getMessage());
         }
         return studentsList;
         
