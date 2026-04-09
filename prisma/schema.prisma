@@ -12,6 +12,5 @@ model Student {
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
   age       Int
-  grade     String?
-  email     String?  @unique
+  average Float
 }
