@@ -20,3 +20,4 @@ target/
 .env
 
 .aider*
+node_modules/
