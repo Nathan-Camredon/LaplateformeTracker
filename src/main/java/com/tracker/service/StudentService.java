@@ -16,6 +16,7 @@ import com.tracker.model.Student;
 
 public class StudentService {
 
+    // Get All Student
     public List<Student> getAllStudents(String sortBy, boolean ascending){
         List<Student> studentsList = new ArrayList<>();
         try {
@@ -29,29 +30,30 @@ public class StudentService {
 
 
 
-            // Switch for sort column
+
+
+            // Switch secure and collumn
             String colSql;
             switch (sortBy.toLowerCase()) {
-                case "id":
-                    colSql = "id";
+                case "id": colSql = "id";
                     break;
+
                 case "first_name":
-                case "prenom":
-                    colSql = "first_name";
+                case "prenom": colSql = "first_name";
                     break;
+
                 case "last_name":
-                case "nom":
-                    colSql = "last_name";
+                case "nom": colSql = "last_name";
                     break;
-                case "age":
-                    colSql = "age";
+
+                case "age": colSql = "age";
                     break;
+
                 case "grade":
-                case "moyenne":
-                    colSql = "grade";
+                case "moyenne": colSql = "grade";
                     break;
-                default:
-                    colSql = "id";
+
+                default: colSql = "id";
                     break;
             }
 
@@ -125,8 +127,100 @@ public class StudentService {
         return studentsList;
     }
 
-    public void addStudent() {}
-    public void deleteStudent() {}
-    public void updateStudent() {}
-    public void getStudent() {}
+
+
+
+
+// Add student
+    public void addStudent(Student student) {
+        String request = "INSERT INTO \"Student\" (first_name, last_name, age, grade) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = DatabaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(request)) {
+            
+            preparedStatement.setString(1, student.getFirstName());
+            preparedStatement.setString(2, student.getLastName());
+            preparedStatement.setInt(3, student.getAge());
+            preparedStatement.setDouble(4, student.getAverage());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error while adding student: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+    // Delete student
+    public void deleteStudent(Student student) {
+        String request = "DELETE FROM 'Student' WHERE id = ?";
+
+        try (Connection connection = DatabaseConfig.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(request)) {
+            
+            preparedStatement.setInt(1, student.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error while deleting student: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+    // Update Student
+    public void updateStudent(Student student) {
+        String request = "UPDATE \"Student\" SET first_name = ?, last_name = ?, age = ?, grade = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(request)) {
+
+            preparedStatement.setString(1, student.getFirstName());
+            preparedStatement.setString(2, student.getLastName());
+            preparedStatement.setInt(3, student.getAge());
+            preparedStatement.setDouble(4, student.getAverage());
+            preparedStatement.setInt(5, student.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error while adding student: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+    // Get Student
+    public Student getStudent(int id) { 
+    String request = "SELECT * FROM \"Student\" WHERE id = ?";
+    Student student = null;
+
+    try (Connection connection = DatabaseConfig.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(request)) {
+
+        preparedStatement.setInt(1, id);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        if (resultSet.next()) {
+            student = new Student();
+            student.setId(resultSet.getInt("id"));
+            student.setFirstName(resultSet.getString("first_name"));
+            student.setLastName(resultSet.getString("last_name"));
+            student.setAge(resultSet.getInt("age"));
+            student.setAverage(resultSet.getDouble("grade"));
+        }
+
+            } catch (SQLException e) {
+            System.err.println("Error while retrieving student: " + e.  getMessage());
+            }
+
+        return student;
+    }
 }

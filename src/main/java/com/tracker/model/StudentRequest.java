@@ -15,7 +15,7 @@ public class StudentRequest {
         String sql = "INSERT INTO \"Student\" (first_name, last_name, age, average) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, firstName);
             pstmt.setString(2, lastName);
@@ -38,7 +38,7 @@ public class StudentRequest {
         String sql = "DELETE FROM \"Student\" WHERE id = ?";
         
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, id);
             int rows = pstmt.executeUpdate();
@@ -61,7 +61,7 @@ public class StudentRequest {
         String sql = "UPDATE \"Student\" SET first_name = ?, last_name = ?, age = ?, average = ? WHERE id = ?";
         
         try (Connection conn = DatabaseConfig.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, firstName);
             pstmt.setString(2, lastName);
@@ -84,8 +84,8 @@ public class StudentRequest {
         String sql = "SELECT * FROM \"Student\"";
         
         try (Connection conn = DatabaseConfig.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql)) {
             
             System.out.println("\n--- Student List ---");
             while (rs.next()) {
