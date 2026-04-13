@@ -18,3 +18,5 @@ target/
 
 # Fichiers de configuration Prisma locaux
 .env
+
+.aider*
