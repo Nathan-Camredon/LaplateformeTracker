@@ -1,0 +1,67 @@
+/* Global application styles */
+.root {
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    /* Gradient from secondary blue to deep navy */
+    -fx-background-color: linear-gradient(to right, #005BAD, #002547);
+}
+
+.title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* Modern Glassmorphism container for the login form */
+.login-card {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 20px;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 20, 0, 0, 10);
+    -fx-padding: 30px;
+}
+
+/* Bold labels for form fields */
+.label-bold {
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Stylized text fields and password fields */
+.text-field-custom {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.1);
+    -fx-border-radius: 8px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+.text-field-custom:focused {
+    -fx-border-color: #00A6FF;
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Primary login button styling */
+.login-button {
+    -fx-background-color: #00A6FF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-cursor: hand;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+}
+
+.login-button:hover {
+    -fx-background-color: #008DDB;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 166, 255, 0.4), 10, 0, 0, 0);
+}
+
+.login-button:pressed {
+    -fx-background-color: #0076B8;
+}
