@@ -21,7 +21,7 @@ public class ExportServiceTest {
     void testExportStudentsToCSV_EmptyList() {
         List<Student> students = new ArrayList<>();
         String result = exportService.exportStudentsToCSV(students);
-        
+
         String expectedHeader = "id,firstName,lastName,age,average\n";
         assertEquals(expectedHeader, result, "Exporting an empty list should only return the header.");
     }
@@ -29,7 +29,7 @@ public class ExportServiceTest {
     @Test
     void testExportStudentsToCSV_NullList() {
         String result = exportService.exportStudentsToCSV(null);
-        
+
         String expectedHeader = "id,firstName,lastName,age,average\n";
         assertEquals(expectedHeader, result, "Exporting a null list should only return the header.");
     }
@@ -56,7 +56,7 @@ public class ExportServiceTest {
 
         // Check for double quote escaping for commas
         assertTrue(result.contains("1,John,\"Doe, Jr.\",20,15.0"), "The comma should be surrounded by quotes.");
-        
+
         // Check for double quote escaping (should be doubled)
         assertTrue(result.contains("2,Jane,\"Quote\"\"Name\",21,17.5"), "The quote should be doubled.");
     }
