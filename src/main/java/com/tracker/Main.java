@@ -10,11 +10,22 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                Main.class.getResource("ressources/Login.fxml"));
+        // Find and load the Login.fxml resource from the classpath
+        var fxmlUrl = Main.class.getResource("/com/tracker/ressources/Login.fxml");
+        if (fxmlUrl == null) {
+            throw new IOException("Cannot find Login.fxml at /com/tracker/ressources/Login.fxml");
+        }
+
+        FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-        String css = Main.class.getResource("css/styles.css").toExternalForm();
-        scene.getStylesheets().add(css);
+
+        // Load and apply the global stylesheet
+        var cssUrl = Main.class.getResource("/com/tracker/css/styles.css");
+        if (cssUrl != null) {
+            scene.getStylesheets().add(cssUrl.toExternalForm());
+        } else {
+            System.err.println("Warning: styles.css not found at /com/tracker/css/styles.css");
+        }
 
         stage.setTitle("Tracker JavaFX");
         stage.setScene(scene);
