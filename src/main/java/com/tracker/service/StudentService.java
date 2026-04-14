@@ -14,9 +14,10 @@ import com.tracker.model.Student;
 
 
 
+
 public class StudentService {
 
-    // Get All Student
+    // -------- Get All Student --------
     public List<Student> getAllStudents(String sortBy, boolean ascending){
         List<Student> studentsList = new ArrayList<>();
         try {
@@ -26,8 +27,6 @@ public class StudentService {
 
             // Sort direction
             String direction = ascending ? "ASC" : "DESC";
-
-
 
 
 
@@ -57,7 +56,7 @@ public class StudentService {
                     break;
             }
 
-
+            
 
             // SQL request
             String request = "SELECT * FROM \"Student\" ORDER BY " + colSql + " " + direction;
@@ -65,6 +64,8 @@ public class StudentService {
             // Request execution
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(request);
+
+
 
 
             // Student data extraction
@@ -91,7 +92,7 @@ public class StudentService {
 
 
 
-
+    // -------- Search Student --------
     public List<Student> searchStudents(String search) {
         List<Student> studentsList = new ArrayList<>();
 
@@ -131,7 +132,7 @@ public class StudentService {
 
 
 
-// Add student
+// -------- Add Student --------
     public void addStudent(Student student) {
         String request = "INSERT INTO \"Student\" (first_name, last_name, age, grade) VALUES (?, ?, ?, ?)";
 
@@ -154,9 +155,9 @@ public class StudentService {
 
 
 
-    // Delete student
+    // -------- Delete Student --------
     public void deleteStudent(Student student) {
-        String request = "DELETE FROM 'Student' WHERE id = ?";
+        String request = "DELETE FROM \"Student\" WHERE id = ?";
 
         try (Connection connection = DatabaseConfig.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(request)) {
@@ -173,7 +174,7 @@ public class StudentService {
 
 
 
-    // Update Student
+    // -------- Update Student --------
     public void updateStudent(Student student) {
         String request = "UPDATE \"Student\" SET first_name = ?, last_name = ?, age = ?, grade = ? WHERE id = ?";
 
@@ -187,8 +188,9 @@ public class StudentService {
             preparedStatement.setInt(5, student.getId());
 
             preparedStatement.executeUpdate();
+            
         } catch (SQLException e) {
-            System.err.println("Error while adding student: " + e.getMessage());
+            System.err.println("Error while updating student: " + e.getMessage());
         }
     }
 
@@ -196,7 +198,7 @@ public class StudentService {
 
 
 
-    // Get Student
+    // -------- Get Student --------
     public Student getStudent(int id) { 
     String request = "SELECT * FROM \"Student\" WHERE id = ?";
     Student student = null;
@@ -223,4 +225,5 @@ public class StudentService {
 
         return student;
     }
+
 }
