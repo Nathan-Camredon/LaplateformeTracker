@@ -9,6 +9,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        // Initialisation à l'ouverture de la fenêtre
+        // Initialization when opening the window
     }
 }

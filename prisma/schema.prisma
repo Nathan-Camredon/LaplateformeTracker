@@ -28,3 +28,4 @@ model Grade {
   student   Student @relation(fields: [studentid], references: [id])
   studentid Int
 }
+
