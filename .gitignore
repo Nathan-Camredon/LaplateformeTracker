@@ -1,22 +1,48 @@
-# Fichiers compilés
+# Build & Compiled files
 target/
+bin/
 *.class
+*.jar
+*.war
+*.ear
 
-# Fichiers de log
-*.log
+# Environment & Sensitive data
+.env
+.env.local
+.env.*.local
 
-# Fichiers et dossiers générés par l'IDE
+# Node / Prisma
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & Editors
 .idea/
-*.iws
 *.iml
+*.iws
 *.ipr
 .vscode/
 .settings/
 .classpath
 .project
 .factorypath
+*.sublime-project
+*.sublime-workspace
 
-# Fichiers de configuration Prisma locaux
-.env
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
 
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.bak
+
+# AI & Special tools
 .aider*
+.agent/
+.gemini/

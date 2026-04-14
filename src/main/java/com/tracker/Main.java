@@ -1,5 +1,6 @@
 package com.tracker;
 
+import com.tracker.config.DatabaseConfig;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +15,9 @@ public class Main extends Application {
     
     @Override
     public void start(Stage stage) throws IOException {
+        // Automatic DB initialization
+        DatabaseConfig.initializeDatabase();
+
         // Find and load the MainView.fxml resource from the classpath
         var fxmlUrl = Main.class.getResource("/com/tracker/ressources/MainView.fxml");
         if (fxmlUrl == null) {

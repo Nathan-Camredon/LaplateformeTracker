@@ -1,31 +1,44 @@
 package com.tracker.controller;
 
 import com.tracker.model.Student;
+import com.tracker.model.StudentRequest;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.SVGPath;
 import java.util.List;
+import java.util.Optional;
 
 public class StudentController {
 
     @FXML
     private VBox studentList;
 
+    private StudentRequest studentRequest = new StudentRequest();
+
     /**
      * Updates the UI list with the provided students
      */
     public void refreshList(List<Student> students) {
         studentList.getChildren().clear();
-
         for (Student student : students) {
             studentList.getChildren().add(createStudentRow(student));
         }
+    }
+
+    /**
+     * Refreshes the list by fetching data directly from the database
+     */
+    public void refreshFromDatabase() {
+        List<Student> students = studentRequest.getAllStudents();
+        refreshList(students);
     }
 
     /**
@@ -65,7 +78,9 @@ public class StudentController {
         actions.setPrefWidth(100);
 
         Button editBtn = createIconButton("M3,17.25 V21 H6.75 L17.81,9.94 L14.06,6.19 L3,17.25 M20.71,7.04 L16.96,3.29 L15.13,5.12 L18.88,8.87 L20.71,7.04 Z", "pen-icon");
+        
         Button deleteBtn = createIconButton("M6,19 c0,1.1 0.9,2 2,2 h8 c1.1,0 2,-0.9 2,-2 V7 H6 v12 z M19,4 h-3.5 l-1,-1 h-5 l-1,1 H5 v2 h14 V4 z", "trash-icon");
+        deleteBtn.setOnAction(e -> handleDelete(student));
 
         actions.getChildren().addAll(editBtn, deleteBtn);
         row.getChildren().addAll(idLabel, fnLabel, lnLabel, ageLabel, avgLabel, actions);
@@ -83,5 +98,28 @@ public class StudentController {
         icon.setScaleY(0.8);
         btn.setGraphic(icon);
         return btn;
+    }
+
+    /**
+     * Handles the deletion logic with a confirmation dialog
+     */
+    private void handleDelete(Student student) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de suppression");
+        alert.setHeaderText("Supprimer l'étudiant : " + student.getFirstName() + " " + student.getLastName() + " ?");
+        alert.setContentText("Cette action est irréversible.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean success = studentRequest.DeleteStudent(student.getId());
+            if (success) {
+                refreshFromDatabase();
+            } else {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Erreur");
+                errorAlert.setHeaderText("La suppression a échoué.");
+                errorAlert.showAndWait();
+            }
+        }
     }
 }

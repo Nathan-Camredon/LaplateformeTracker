@@ -1,7 +1,7 @@
 package com.tracker.controller;
 
 import com.tracker.model.Student;
-import com.tracker.service.StudentService;
+import com.tracker.model.StudentRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +22,7 @@ public class MainController implements Initializable {
     private StackPane contentArea;
 
     private StudentController studentController;
-    private StudentService studentService = new StudentService();
+    private StudentRequest studentRequest = new StudentRequest();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -31,8 +31,7 @@ public class MainController implements Initializable {
         
         // Initial data load
         if (studentController != null) {
-            List<Student> allStudents = studentService.getAllStudents("id", true);
-            studentController.refreshList(allStudents);
+            studentController.refreshFromDatabase();
         }
     }
 
@@ -50,8 +49,7 @@ public class MainController implements Initializable {
             // Refresh the dashboard list after a successful addition
             addController.setOnSuccessCallback(() -> {
                 if (studentController != null) {
-                    List<Student> allStudents = studentService.getAllStudents("id", true);
-                    studentController.refreshList(allStudents);
+                    studentController.refreshFromDatabase();
                 }
             });
 

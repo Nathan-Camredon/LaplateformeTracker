@@ -31,7 +31,7 @@
             <padding>
                 <Insets left="40" right="40"/>
             </padding>
-            <Region prefWidth="60" border="0 1 0 0" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="60" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
             <Region prefWidth="120" HBox.hgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
             <Region prefWidth="120" HBox.hgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
             <Region prefWidth="60" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>

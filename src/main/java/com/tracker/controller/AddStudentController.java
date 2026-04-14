@@ -1,7 +1,7 @@
 package com.tracker.controller;
 
 import com.tracker.model.Student;
-import com.tracker.service.StudentService;
+import com.tracker.model.StudentRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,7 +20,7 @@ public class AddStudentController {
     @FXML
     private Label errorLabel;
 
-    private StudentService studentService = new StudentService();
+    private StudentRequest studentRequest = new StudentRequest();
     private Runnable onSuccessCallback;
 
     public void setOnSuccessCallback(Runnable callback) {
@@ -44,7 +44,12 @@ public class AddStudentController {
             int age = Integer.parseInt(ageStr);
 
             Student newStudent = new Student(0, firstName, lastName, age, email);
-            boolean success = studentService.addStudent(newStudent);
+            boolean success = studentRequest.CreateStudent(
+                    newStudent.getFirstName(), 
+                    newStudent.getLastName(), 
+                    newStudent.getAge(), 
+                    newStudent.getEmail()
+            );
 
             if (success) {
                 if (onSuccessCallback != null) {
