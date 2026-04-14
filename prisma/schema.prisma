@@ -8,12 +8,27 @@ generator client {
 }
 
 model Student {
-  id        Int      @id @default(autoincrement())
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
-  age       Int
-  grade     String?
-  email     String?  @unique
+  id         Int      @id @default(autoincrement())
+  firstName  String   @map("first_name")
+  lastName   String   @map("last_name")
+  age        Int
+  average    Float
+  grades     Grade[]
 }
 
+<<<<<<< HEAD
 
+=======
+model User {
+  login     String @unique 
+  password  String
+}
+
+model Grade {
+  id        Int     @id @default(autoincrement())
+  value     Int
+  subject   String
+  student   Student @relation(fields: [studentid], references: [id])
+  studentid Int
+}
+>>>>>>> feature/studentrequest

@@ -7,7 +7,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Main entry point of the JavaFX Tracker application.
+ */
 public class Main extends Application {
+    
     @Override
     public void start(Stage stage) throws IOException {
         // Find and load the MainView.fxml resource from the classpath
@@ -33,6 +37,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        // Launch the application
         launch();
     }
 }
