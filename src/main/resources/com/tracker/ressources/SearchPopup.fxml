@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/fxml" 
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tracker.controller.SearchController"
+      spacing="15" 
+      alignment="CENTER"
+      styleClass="main-window"
+      stylesheets="@style.css"
+      prefWidth="400" prefHeight="350">
+    
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <Label text="Recherche Avancée" styleClass="title-label" style="-fx-font-size: 20px;"/>
+
+    <VBox spacing="5" styleClass="content-container" style="-fx-padding: 20;">
+        <VBox spacing="5">
+            <Label text="ID Étudiant" styleClass="column-header"/>
+            <TextField fx:id="idField" promptText="Ex: 1" styleClass="search-button" style="-fx-alignment: center-left;"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Prénom" styleClass="column-header"/>
+            <TextField fx:id="firstNameField" promptText="Ex: Jean" styleClass="search-button" style="-fx-alignment: center-left;"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Nom" styleClass="column-header"/>
+            <TextField fx:id="lastNameField" promptText="Ex: Dupont" styleClass="search-button" style="-fx-alignment: center-left;"/>
+        </VBox>
+    </VBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Rechercher" onAction="#handleSearch" styleClass="plus-button" prefWidth="120"/>
+        <Button text="Annuler" onAction="#handleCancel" styleClass="search-button" prefWidth="120"/>
+    </HBox>
+
+</VBox>

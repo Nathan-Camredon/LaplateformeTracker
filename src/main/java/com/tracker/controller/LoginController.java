@@ -33,7 +33,7 @@ public class LoginController {
 
             /* Redirect */
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/view/Accueil.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/MainView.fxml"));
                 Parent root = loader.load();
 
                 Stage stage = (Stage) userIdField.getScene().getWindow();

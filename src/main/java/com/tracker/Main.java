@@ -10,14 +10,14 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        // Find and load the Login.fxml resource from the classpath
-        var fxmlUrl = Main.class.getResource("/com/tracker/ressources/Login.fxml");
+        // Find and load the MainView.fxml resource from the classpath
+        var fxmlUrl = Main.class.getResource("/com/tracker/ressources/MainView.fxml");
         if (fxmlUrl == null) {
-            throw new IOException("Cannot find Login.fxml at /com/tracker/ressources/Login.fxml");
+            throw new IOException("Cannot find MainView.fxml at /com/tracker/ressources/MainView.fxml");
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl);
-        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 700);
 
         // Load and apply the global stylesheet
         var cssUrl = Main.class.getResource("/com/tracker/css/styles.css");

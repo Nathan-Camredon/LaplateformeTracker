@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/fxml" 
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.tracker.controller.MainController"
+            styleClass="main-window"
+            stylesheets="@style.css"
+            prefHeight="600.0" prefWidth="900.0">
+
+    <!-- Header Section -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" prefHeight="80.0">
+            <padding>
+                <Insets top="20" right="40" bottom="20" left="40"/>
+            </padding>
+            
+            <!-- Logo area -->
+            <ImageView fitHeight="40.0" preserveRatio="true">
+                <Image url="@../images/laplateforme.png"/>
+            </ImageView>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Action buttons -->
+            <Button text="Recherche avancée" onAction="#handleAdvancedSearch" styleClass="search-button"/>
+            <Button text="+" onAction="#handleAddStudent" styleClass="plus-button" prefWidth="40" prefHeight="40"/>
+        </HBox>
+    </top>
+
+    <!-- Content Placeholder -->
+    <center>
+        <StackPane fx:id="contentArea">
+            <padding>
+                <Insets top="10" right="40" bottom="40" left="40"/>
+            </padding>
+            
+            <!-- Default Content: The stylized container -->
+            <VBox styleClass="content-container">
+                <!-- Inner content will be loaded here or defined in Dashboard.fxml -->
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- Logout footer -->
+    <bottom>
+        <AnchorPane prefHeight="60.0">
+            <Button styleClass="logout-button" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20">
+                <graphic>
+                    <SVGPath content="M10,2 L18,2 L18,18 L10,18 M14,6 L18,10 L14,14 M6,10 L18,10" 
+                            styleClass="logout-icon" scaleX="1.5" scaleY="1.5"/>
+                </graphic>
+            </Button>
+        </AnchorPane>
+    </bottom>
+
+</BorderPane>

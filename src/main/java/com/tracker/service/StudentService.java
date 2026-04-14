@@ -72,7 +72,8 @@ public class StudentService {
                 student.setFirstName(resultSet.getString("first_name"));
                 student.setLastName(resultSet.getString("last_name"));
                 student.setAge(resultSet.getInt("age"));
-                student.setAverage(resultSet.getDouble("grade"));
+                student.setEmail(resultSet.getString("email"));
+                student.setAverage(0.0);
 
                 studentsList.add(student);
             }
@@ -80,6 +81,7 @@ public class StudentService {
             connection.close();
         } catch (SQLException e) {
             System.out.println("Error while retrieving students: " + e.getMessage());
+            e.printStackTrace();
         }
         return studentsList;
         
@@ -116,17 +118,86 @@ public class StudentService {
                 s.setFirstName(rs.getString("first_name"));
                 s.setLastName(rs.getString("last_name"));
                 s.setAge(rs.getInt("age"));
-                s.setAverage(rs.getDouble("grade"));
+                s.setEmail(rs.getString("email"));
+                s.setAverage(0.0); 
                 studentsList.add(s);
             }
         } catch (SQLException e) {
             System.err.println("Erreur recherche : " + e.getMessage());
+            e.printStackTrace();
         }
         return studentsList;
     }
 
-    public void addStudent() {}
-    public void deleteStudent() {}
-    public void updateStudent() {}
-    public void getStudent() {}
+    /**
+     * Advanced Search with multiple optional criteria
+     */
+    public List<Student> advancedSearch(String idStr, String firstName, String lastName) {
+        List<Student> studentsList = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM \"Student\" WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+
+        if (idStr != null && !idStr.isEmpty()) {
+            query.append("AND CAST(id AS TEXT) LIKE ? ");
+            params.add("%" + idStr + "%");
+        }
+        if (firstName != null && !firstName.isEmpty()) {
+            query.append("AND first_name ILIKE ? ");
+            params.add("%" + firstName + "%");
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            query.append("AND last_name ILIKE ? ");
+            params.add("%" + lastName + "%");
+        }
+
+        try (Connection conn = DatabaseConfig.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
+            
+            for (int i = 0; i < params.size(); i++) {
+                pstmt.setObject(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Student s = new Student();
+                    s.setId(rs.getInt("id"));
+                    s.setFirstName(rs.getString("first_name"));
+                    s.setLastName(rs.getString("last_name"));
+                    s.setAge(rs.getInt("age"));
+                    s.setEmail(rs.getString("email"));
+                    s.setAverage(0.0);
+                    studentsList.add(s);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Advanced search error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return studentsList;
+    }
+
+
+    public boolean addStudent(Student s) {
+        String query = "INSERT INTO \"Student\" (first_name, last_name, age, email) VALUES (?, ?, ?, ?)";
+        
+        try (Connection conn = DatabaseConfig.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, s.getFirstName());
+            pstmt.setString(2, s.getLastName());
+            pstmt.setInt(3, s.getAge());
+            pstmt.setString(4, s.getEmail());
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+            
+        } catch (SQLException e) {
+            System.err.println("Error adding student: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public void deleteStudent(int id) {}
+    public void updateStudent(Student s) {}
+    public void getStudent(int id) {}
 }

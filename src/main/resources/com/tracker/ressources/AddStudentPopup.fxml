@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/fxml" 
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.tracker.controller.AddStudentController"
+      spacing="15" 
+      alignment="CENTER"
+      styleClass="main-window"
+      stylesheets="@style.css"
+      prefWidth="450" prefHeight="450">
+    
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <Label text="Ajouter un Étudiant" styleClass="title-label" style="-fx-font-size: 20px;"/>
+
+    <VBox spacing="10" styleClass="content-container" style="-fx-padding: 20;">
+        <VBox spacing="5">
+            <Label text="Prénom" styleClass="column-header"/>
+            <TextField fx:id="firstNameField" promptText="Prénom de l'élève" styleClass="search-button" style="-fx-alignment: center-left;"/>
+        </VBox>
+
+        <VBox spacing="5">
+            <Label text="Nom" styleClass="column-header"/>
+            <TextField fx:id="lastNameField" promptText="Nom de l'élève" styleClass="search-button" style="-fx-alignment: center-left;"/>
+        </VBox>
+
+        <HBox spacing="15">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Âge" styleClass="column-header"/>
+                <TextField fx:id="ageField" promptText="Ex: 20" styleClass="search-button" style="-fx-alignment: center-left;"/>
+            </VBox>
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Email" styleClass="column-header"/>
+                <TextField fx:id="emailField" promptText="Ex: marie@curie.fr" styleClass="search-button" style="-fx-alignment: center-left;"/>
+            </VBox>
+        </HBox>
+        
+        <Label fx:id="errorLabel" style="-fx-text-fill: #ff6b6b; -fx-font-size: 12px;" visible="false"/>
+    </VBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button text="Ajouter" onAction="#handleSave" styleClass="plus-button" prefWidth="120"/>
+        <Button text="Annuler" onAction="#handleCancel" styleClass="search-button" prefWidth="120"/>
+    </HBox>
+
+</VBox>

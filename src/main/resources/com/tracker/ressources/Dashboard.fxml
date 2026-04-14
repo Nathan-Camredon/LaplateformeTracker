@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/fxml" 
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="com.tracker.controller.StudentController"
+    spacing="10"
+    styleClass="dashboard-container">
+    
+    <!-- Table Header Row -->
+    <HBox spacing="10" alignment="CENTER_LEFT" prefHeight="40.0">
+        <padding>
+            <Insets left="40" right="40" top="10" bottom="10"/>
+        </padding>
+        <Label text="ID" prefWidth="60" styleClass="column-header"/>
+        <Label text="Prenom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS"/>
+        <Label text="Nom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS"/>
+        <Label text="Age" prefWidth="60" styleClass="column-header"/>
+        <Label text="Moyenne" prefWidth="80" styleClass="column-header"/>
+        <Region prefWidth="100" /> <!-- Spacer for action icons -->
+    </HBox>
+
+    <!-- Content Area with Vertical Separators -->
+    <StackPane VBox.vgrow="ALWAYS">
+        <!-- Vertical Lines Overlay (Simulating the Figma look) -->
+        <HBox mouseTransparent="true" spacing="10">
+            <padding>
+                <Insets left="40" right="40"/>
+            </padding>
+            <Region prefWidth="60" border="0 1 0 0" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="120" HBox.hgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="120" HBox.hgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="60" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="80" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+        </HBox>
+
+        <!-- Scrollable List of Students -->
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;">
+            <VBox fx:id="studentList" spacing="5">
+                <!-- Rows will be added dynamically by StudentController -->
+            </VBox>
+        </ScrollPane>
+    </StackPane>
+</VBox>

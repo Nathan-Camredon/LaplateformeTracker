@@ -1,0 +1,100 @@
+/* 
+    Modern Premium Style for La Plateforme Tracker
+    Aesthetics: Dark Blue Gradient, Rounded Corners, Clean Typography
+*/
+
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+}
+
+/* Background gradient based on the Figma design */
+.main-window {
+    -fx-background-color: linear-gradient(to bottom right, #004e92, #000428);
+}
+
+/* Main Container: The rounded bordered area in the center */
+.content-container {
+    -fx-background-color: rgba(0, 78, 146, 0.2); /* Semi-transparent blue */
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+}
+
+/* Logo and Title Styles */
+.title-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    /* Subtle shadow to match Figma logo look */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0, 0, 2);
+}
+
+/* Header Labels (ID, Prenom, etc.) */
+.column-header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-style: italic;
+    -fx-text-fill: white;
+}
+
+/* Buttons Styles */
+.search-button {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-style: italic;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.search-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.plus-button {
+    -fx-background-color: rgba(0, 78, 146, 0.5);
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.plus-button:hover {
+    -fx-background-color: #0078D7;
+}
+
+/* Action Icons (Pen & Trash) */
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+}
+
+.icon-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5;
+}
+
+.trash-icon {
+    -fx-fill: #ff6b6b; /* Reddish from Figma */
+}
+
+.pen-icon {
+    -fx-fill: white;
+}
+
+/* Logout Button at bottom-right */
+.logout-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.logout-icon {
+    -fx-fill: white;
+}

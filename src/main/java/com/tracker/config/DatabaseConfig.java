@@ -15,17 +15,23 @@ public class DatabaseConfig {
      * @throws SQLException If the connection fails.
      */
     public static Connection getConnection() throws SQLException {
-        // Retrieves the database URL from the .env file
         String rawUrl = dotenv.get("DATABASE_URL");
-        
         if (rawUrl == null) {
-            throw new SQLException("The DATABASE_URL variable is missing in the .env file");
+            throw new SQLException("DATABASE_URL is missing in .env file");
         }
 
-        // JDBC requires the "jdbc:" prefix to identify the protocol
-        String jdbcUrl = rawUrl.replace("postgresql://", "jdbc:postgresql://");
-
-        // Establishes the connection with the default credentials from your .env
-        return DriverManager.getConnection(jdbcUrl, "postgres", "root");
+        // Standard JDBC format: jdbc:postgresql://host:port/database
+        // We handle URLs like: postgresql://user:pass@host:port/db
+        try {
+            String cleanUrl = rawUrl.replace("postgresql://", "jdbc:postgresql://");
+            
+            // If the URL contains credentials (user:password@), we try a direct connection
+            // The PostgreSQL JDBC driver usually handles this format if correctly prefixed.
+            return DriverManager.getConnection(cleanUrl);
+        } catch (SQLException e) {
+            // Fallback: If it fails, let's try to be even more explicit or provide a better error
+            System.err.println("JDBC Connection attempt failed with URL: " + rawUrl);
+            throw e; 
+        }
     }
 }
