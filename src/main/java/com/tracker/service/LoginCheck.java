@@ -18,7 +18,7 @@ public class LoginCheck {
         String query = "SELECT * FROM \"User\" WHERE login = ? AND password = ?";
 
         try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, hashedPassword);

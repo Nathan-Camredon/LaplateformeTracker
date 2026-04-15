@@ -51,7 +51,7 @@
     <!-- Logout footer -->
     <bottom>
         <AnchorPane prefHeight="60.0">
-            <Button styleClass="logout-button" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20">
+            <Button styleClass="logout-button" onAction="#handleLogout" style="-fx-cursor: hand;" AnchorPane.bottomAnchor="20" AnchorPane.rightAnchor="20">
                 <graphic>
                     <SVGPath content="M10,2 L18,2 L18,18 L10,18 M14,6 L18,10 L14,14 M6,10 L18,10" 
                             styleClass="logout-icon" scaleX="1.5" scaleY="1.5"/>

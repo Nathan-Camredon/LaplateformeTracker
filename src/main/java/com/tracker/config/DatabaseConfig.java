@@ -1,96 +1,88 @@
 package com.tracker.config;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.net.URI;
 
 public class DatabaseConfig {
-    // Loads the .env file
     private static final Dotenv dotenv = Dotenv.load();
 
     /**
-     * Establishes a connection to the PostgreSQL database.
-     * @return An open Connection object.
-     * @throws SQLException If the connection fails.
+     * Se connecte à la base de données PostgreSQL en utilisant l'URL du fichier .env
      */
     public static Connection getConnection() throws SQLException {
         String rawUrl = dotenv.get("DATABASE_URL");
         if (rawUrl == null) {
-            throw new SQLException("DATABASE_URL is missing in .env file");
+            throw new SQLException("DATABASE_URL est manquante dans le fichier .env");
         }
 
         try {
-            // The URI class expects a standard scheme like 'postgresql://'
-            // If the URL already starts with 'jdbc:postgresql://', we remove the 'jdbc:' part for parsing
+            // On prépare l'URL pour la lecture (on retire 'jdbc:' si présent)
             String uriString = rawUrl.startsWith("jdbc:") ? rawUrl.substring(5) : rawUrl;
-            java.net.URI uri = new java.net.URI(uriString);
+            URI uri = new URI(uriString);
 
+            // On extrait les informations de l'URL
             String host = uri.getHost();
             int port = uri.getPort();
             String path = uri.getPath();
             String userInfo = uri.getUserInfo();
 
-            // Construct the JDBC URL without the credentials part
+            // Construction de l'URL JDBC standard
             String jdbcUrl = "jdbc:postgresql://" + host + (port != -1 ? ":" + port : "") + path;
 
             if (userInfo != null && userInfo.contains(":")) {
-                String[] credentials = userInfo.split(":", 2);
-                return DriverManager.getConnection(jdbcUrl, credentials[0], credentials[1]);
-            } else if (userInfo != null) {
-                return DriverManager.getConnection(jdbcUrl, userInfo, null);
-            } else {
-                return DriverManager.getConnection(jdbcUrl);
+                String[] auth = userInfo.split(":");
+                return DriverManager.getConnection(jdbcUrl, auth[0], auth[1]);
             }
+            return DriverManager.getConnection(jdbcUrl);
 
         } catch (Exception e) {
-            System.err.println("Failed to parse or connect with URL: " + rawUrl);
-            // If URI parsing fails, try the cleanUrl fallback as a last resort
-            String cleanUrl = rawUrl.replace("postgresql://", "jdbc:postgresql://");
-            return DriverManager.getConnection(cleanUrl);
+            // En cas d'erreur de lecture, on tente une conversion simple
+            String fallbackUrl = rawUrl.replace("postgresql://", "jdbc:postgresql://");
+            return DriverManager.getConnection(fallbackUrl);
         }
     }
 
     /**
-     * Initializes the database schema automatically.
+     * Initialise automatiquement les tables si elles n'existent pas encore.
      */
     public static void initializeDatabase() {
-        String[] queries = {
-            // Table User
-            "CREATE TABLE IF NOT EXISTS \"User\" (" +
-            "login VARCHAR(255) PRIMARY KEY, " +
-            "password VARCHAR(255) NOT NULL)",
-
-            // Table Student
-            "CREATE TABLE IF NOT EXISTS \"Student\" (" +
-            "id SERIAL PRIMARY KEY, " +
-            "first_name VARCHAR(255) NOT NULL, " +
-            "last_name VARCHAR(255) NOT NULL, " +
-            "age INTEGER NOT NULL)",
-
-            // Ensure Email column exists (for backward compatibility)
-            "ALTER TABLE \"Student\" ADD COLUMN IF NOT EXISTS email VARCHAR(255) UNIQUE",
-
-            // Table Grade
-            "CREATE TABLE IF NOT EXISTS \"Grade\" (" +
-            "id SERIAL PRIMARY KEY, " +
-            "value INTEGER NOT NULL, " +
-            "subject VARCHAR(255), " +
-            "studentid INTEGER REFERENCES \"Student\"(id) ON DELETE CASCADE)"
-        };
-
-        try (Connection conn = getConnection();
+        try (Connection conn = getConnection(); 
              Statement stmt = conn.createStatement()) {
-            
-            for (String query : queries) {
-                stmt.execute(query);
+
+            // Table des utilisateurs
+            stmt.execute("CREATE TABLE IF NOT EXISTS \"User\" (" +
+                        "login VARCHAR(255) PRIMARY KEY, " +
+                        "password VARCHAR(255) NOT NULL)");
+
+            // Table des étudiants
+            stmt.execute("CREATE TABLE IF NOT EXISTS \"Student\" (" +
+                        "id SERIAL PRIMARY KEY, " +
+                        "first_name VARCHAR(255) NOT NULL, " +
+                        "last_name VARCHAR(255) NOT NULL, " +
+                        "age INTEGER NOT NULL, " +
+                        "email VARCHAR(255) UNIQUE)");
+
+            // Table des notes
+            stmt.execute("CREATE TABLE IF NOT EXISTS \"Grade\" (" +
+                        "id SERIAL PRIMARY KEY, " +
+                        "value INTEGER NOT NULL, " +
+                        "subject VARCHAR(255), " +
+                        "studentid INTEGER REFERENCES \"Student\"(id) ON DELETE CASCADE)");
+
+            // Ajout d'un utilisateur par défaut si la table est vide
+            ResultSet rs = stmt.executeQuery("SELECT count(*) FROM \"User\"");
+            if (rs.next() && rs.getInt(1) == 0) {
+                // Mot de passe 'admin' haché en SHA-256
+                String hashedAdmin = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+                stmt.execute("INSERT INTO \"User\" (login, password) VALUES ('admin', '" + hashedAdmin + "')");
+                System.out.println("👤 Utilisateur admin créé par défaut.");
             }
-            System.out.println("✅ Database schema initialized successfully.");
-            
+
+            System.out.println("✅ Base de données prête.");
+
         } catch (SQLException e) {
-            System.err.println("❌ Database initialization failed: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("❌ Erreur d'initialisation : " + e.getMessage());
         }
     }
 }

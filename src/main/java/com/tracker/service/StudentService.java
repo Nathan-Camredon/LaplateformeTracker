@@ -48,7 +48,7 @@ public class StudentService {
                     break;
                 case "grade":
                 case "moyenne":
-                    colSql = "grade";
+                    colSql = "avg_grade";
                     break;
                 default:
                     colSql = "id";
@@ -57,13 +57,13 @@ public class StudentService {
 
 
 
-            // SQL request
-            String request = "SELECT * FROM \"Student\" ORDER BY " + colSql + " " + direction;
+            // SQL request with average grade join
+            String request = "SELECT s.*, (SELECT AVG(value) FROM \"Grade\" WHERE studentid = s.id) as avg_grade " +
+                             "FROM \"Student\" s ORDER BY " + colSql + " " + direction;
 
             // Request execution
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(request);
-
 
             // Student data extraction
             while(resultSet.next()) {
@@ -73,7 +73,7 @@ public class StudentService {
                 student.setLastName(resultSet.getString("last_name"));
                 student.setAge(resultSet.getInt("age"));
                 student.setEmail(resultSet.getString("email"));
-                student.setAverage(0.0);
+                student.setAverage(resultSet.getDouble("avg_grade"));
 
                 studentsList.add(student);
             }
@@ -175,29 +175,4 @@ public class StudentService {
         }
         return studentsList;
     }
-
-
-    public boolean addStudent(Student s) {
-        String query = "INSERT INTO \"Student\" (first_name, last_name, age, email) VALUES (?, ?, ?, ?)";
-        
-        try (Connection conn = DatabaseConfig.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setString(1, s.getFirstName());
-            pstmt.setString(2, s.getLastName());
-            pstmt.setInt(3, s.getAge());
-            pstmt.setString(4, s.getEmail());
-
-            int affectedRows = pstmt.executeUpdate();
-            return affectedRows > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error adding student: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-    public void deleteStudent(int id) {}
-    public void updateStudent(Student s) {}
-    public void getStudent(int id) {}
 }

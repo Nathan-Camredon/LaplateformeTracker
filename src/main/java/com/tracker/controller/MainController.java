@@ -1,7 +1,5 @@
 package com.tracker.controller;
 
-import com.tracker.model.Student;
-import com.tracker.model.StudentRequest;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,7 +11,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -22,21 +19,19 @@ public class MainController implements Initializable {
     private StackPane contentArea;
 
     private StudentController studentController;
-    private StudentRequest studentRequest = new StudentRequest();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Load the Dashboard by default
+        // Charge le tableau de bord par défaut au démarrage
         loadView("Dashboard.fxml");
         
-        // Initial data load
         if (studentController != null) {
             studentController.refreshFromDatabase();
         }
     }
 
     /**
-     * Opens the Add Student Popup as a modal dialog
+     * Ouvre la fenêtre d'ajout d'étudiant.
      */
     @FXML
     private void handleAddStudent() {
@@ -44,10 +39,10 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/AddStudentPopup.fxml"));
             Parent root = loader.load();
             
-            AddStudentController addController = loader.getController();
+            AddStudentController controller = loader.getController();
             
-            // Refresh the dashboard list after a successful addition
-            addController.setOnSuccessCallback(() -> {
+            // On rafraîchit la liste si l'ajout est réussi
+            controller.setOnSuccessCallback(() -> {
                 if (studentController != null) {
                     studentController.refreshFromDatabase();
                 }
@@ -61,12 +56,12 @@ public class MainController implements Initializable {
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error opening add student popup: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     /**
-     * Opens the Advanced Search Popup as a modal dialog
+     * Ouvre la fenêtre de recherche avancée.
      */
     @FXML
     private void handleAdvancedSearch() {
@@ -76,7 +71,7 @@ public class MainController implements Initializable {
             
             SearchController searchController = loader.getController();
             
-            // Link the search results to the dashboard
+            // Lie les résultats de recherche au tableau de bord
             searchController.setOnSearchCallback(results -> {
                 if (studentController != null) {
                     studentController.refreshList(results);
@@ -91,26 +86,45 @@ public class MainController implements Initializable {
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error opening search popup: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     /**
-     * Helper method to load different FXML views into the center area
+     * Charge une vue FXML dans la zone centrale de l'application.
      */
     public void loadView(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/" + fxmlFile));
             Node node = loader.load();
             
-            // Store the controller if we loaded the dashboard
             if (fxmlFile.equals("Dashboard.fxml")) {
                 this.studentController = loader.getController();
             }
             
             contentArea.getChildren().setAll(node);
         } catch (IOException e) {
-            System.err.println("Error loading view " + fxmlFile + ": " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Déconnecte l'utilisateur et retourne à la page de connexion.
+     */
+    @FXML
+    private void handleLogout() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/tracker/ressources/Login.fxml"));
+            Stage stage = (Stage) contentArea.getScene().getWindow();
+            
+            // On remplace la racine de la scène actuelle par la vue de Login
+            stage.getScene().setRoot(root);
+            
+            // Optionnel : on peut redimensionner la fenêtre pour le login si besoin
+            stage.setWidth(1000);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+            
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

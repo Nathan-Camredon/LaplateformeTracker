@@ -31,14 +31,21 @@ public class LoginController {
         if (success) {
             System.out.println("Connexion success !");
 
-            /* Redirect */
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/MainView.fxml"));
                 Parent root = loader.load();
 
                 Stage stage = (Stage) userIdField.getScene().getWindow();
+                Scene scene = new Scene(root, 1000, 700);
+                
+                // On applique le CSS à la nouvelle scène
+                String css = getClass().getResource("/com/tracker/css/styles.css").toExternalForm();
+                if (css != null) {
+                    scene.getStylesheets().add(css);
+                }
 
-                stage.setScene(new Scene(root));
+                stage.setScene(scene);
+                stage.centerOnScreen();
                 stage.show();
             } catch (Exception e) {
                 e.printStackTrace();

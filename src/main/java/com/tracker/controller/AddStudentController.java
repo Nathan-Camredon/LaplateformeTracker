@@ -3,28 +3,42 @@ package com.tracker.controller;
 import com.tracker.model.Student;
 import com.tracker.model.StudentRequest;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class AddStudentController {
 
-    @FXML
-    private TextField firstNameField;
-    @FXML
-    private TextField lastNameField;
-    @FXML
-    private TextField ageField;
-    @FXML
-    private TextField emailField;
-    @FXML
-    private Label errorLabel;
+    @FXML private TextField firstNameField;
+    @FXML private TextField lastNameField;
+    @FXML private TextField ageField;
+    @FXML private TextField emailField;
+    @FXML private Label errorLabel;
+    @FXML private Label titleLabel;
+    @FXML private Button submitButton;
 
     private StudentRequest studentRequest = new StudentRequest();
     private Runnable onSuccessCallback;
+    private Student existingStudent;
 
     public void setOnSuccessCallback(Runnable callback) {
         this.onSuccessCallback = callback;
+    }
+
+    /**
+     * Prépare le formulaire pour l'édition d'un étudiant existant.
+     */
+    public void setStudent(Student student) {
+        this.existingStudent = student;
+        
+        firstNameField.setText(student.getFirstName());
+        lastNameField.setText(student.getLastName());
+        ageField.setText(String.valueOf(student.getAge()));
+        emailField.setText(student.getEmail());
+        
+        if (titleLabel != null) titleLabel.setText("Modifier l'Étudiant");
+        if (submitButton != null) submitButton.setText("Mettre à jour");
     }
 
     @FXML
@@ -34,34 +48,30 @@ public class AddStudentController {
         String ageStr = ageField.getText();
         String email = emailField.getText();
 
-        // Basic validation: all fields must be filled
         if (firstName.isEmpty() || lastName.isEmpty() || ageStr.isEmpty() || email.isEmpty()) {
-            showError("Veuillez remplir tous les champs !");
+            showError("Merci de remplir tous les champs !");
             return;
         }
 
         try {
             int age = Integer.parseInt(ageStr);
+            boolean success;
 
-            Student newStudent = new Student(0, firstName, lastName, age, email);
-            boolean success = studentRequest.CreateStudent(
-                    newStudent.getFirstName(), 
-                    newStudent.getLastName(), 
-                    newStudent.getAge(), 
-                    newStudent.getEmail()
-            );
+            if (existingStudent != null) {
+                success = studentRequest.Update(existingStudent.getId(), firstName, lastName, age, email);
+            } else {
+                success = studentRequest.CreateStudent(firstName, lastName, age, email);
+            }
 
             if (success) {
-                if (onSuccessCallback != null) {
-                    onSuccessCallback.run();
-                }
+                if (onSuccessCallback != null) onSuccessCallback.run();
                 closePopup();
             } else {
-                showError("Erreur lors de l'ajout dans la base de données.");
+                showError("Erreur lors de l'enregistrement.");
             }
 
         } catch (NumberFormatException e) {
-            showError("L'âge et la moyenne doivent être des nombres.");
+            showError("L'âge doit être un nombre.");
         }
     }
 

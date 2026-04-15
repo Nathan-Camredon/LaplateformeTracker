@@ -2,124 +2,96 @@ package com.tracker.controller;
 
 import com.tracker.model.Student;
 import com.tracker.model.StudentRequest;
+import com.tracker.service.StudentService;
+import com.tracker.ui.StudentRow;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.SVGPath;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 public class StudentController {
 
-    @FXML
-    private VBox studentList;
+    @FXML private VBox studentList;
 
     private StudentRequest studentRequest = new StudentRequest();
+    private StudentService studentService = new StudentService();
+
+    // État du tri
+    private String currentSortColumn = "id";
+    private boolean isAscending = true;
 
     /**
-     * Updates the UI list with the provided students
+     * Rafraîchit l'affichage avec la liste triée.
      */
-    public void refreshList(List<Student> students) {
+    public void refreshFromDatabase() {
+        List<Student> students = studentService.getAllStudents(currentSortColumn, isAscending);
+        
         studentList.getChildren().clear();
-        for (Student student : students) {
-            studentList.getChildren().add(createStudentRow(student));
+        for (Student s : students) {
+            // Utilisation du nouveau composant StudentRow
+            studentList.getChildren().add(new StudentRow(s, () -> handleEdit(s), () -> handleDelete(s)));
         }
     }
 
-    /**
-     * Refreshes the list by fetching data directly from the database
-     */
-    public void refreshFromDatabase() {
-        List<Student> students = studentRequest.getAllStudents();
-        refreshList(students);
+    public void refreshList(List<Student> students) {
+        studentList.getChildren().clear();
+        for (Student s : students) {
+            studentList.getChildren().add(new StudentRow(s, () -> handleEdit(s), () -> handleDelete(s)));
+        }
     }
 
-    /**
-     * Creates a stylized HBox row for a student (matching Dashboard.fxml mockup)
-     */
-    private HBox createStudentRow(Student student) {
-        HBox row = new HBox(10);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPrefHeight(50.0);
-        row.setPadding(new Insets(0, 40, 0, 40));
-
-        Label idLabel = new Label(String.valueOf(student.getId()));
-        idLabel.setPrefWidth(60);
-        idLabel.setStyle("-fx-text-fill: white;");
-
-        Label fnLabel = new Label(student.getFirstName());
-        fnLabel.setPrefWidth(120);
-        HBox.setHgrow(fnLabel, Priority.ALWAYS);
-        fnLabel.setStyle("-fx-text-fill: white;");
-
-        Label lnLabel = new Label(student.getLastName());
-        lnLabel.setPrefWidth(120);
-        HBox.setHgrow(lnLabel, Priority.ALWAYS);
-        lnLabel.setStyle("-fx-text-fill: white;");
-
-        Label ageLabel = new Label(String.valueOf(student.getAge()));
-        ageLabel.setPrefWidth(60);
-        ageLabel.setStyle("-fx-text-fill: white;");
-
-        Label avgLabel = new Label(String.valueOf(student.getAverage()));
-        avgLabel.setPrefWidth(80);
-        avgLabel.setStyle("-fx-text-fill: white;");
-
-        // Action Buttons
-        HBox actions = new HBox(10);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-        actions.setPrefWidth(100);
-
-        Button editBtn = createIconButton("M3,17.25 V21 H6.75 L17.81,9.94 L14.06,6.19 L3,17.25 M20.71,7.04 L16.96,3.29 L15.13,5.12 L18.88,8.87 L20.71,7.04 Z", "pen-icon");
-        
-        Button deleteBtn = createIconButton("M6,19 c0,1.1 0.9,2 2,2 h8 c1.1,0 2,-0.9 2,-2 V7 H6 v12 z M19,4 h-3.5 l-1,-1 h-5 l-1,1 H5 v2 h14 V4 z", "trash-icon");
-        deleteBtn.setOnAction(e -> handleDelete(student));
-
-        actions.getChildren().addAll(editBtn, deleteBtn);
-        row.getChildren().addAll(idLabel, fnLabel, lnLabel, ageLabel, avgLabel, actions);
-
-        return row;
+    private void handleSort(String column) {
+        if (currentSortColumn.equals(column)) {
+            isAscending = !isAscending;
+        } else {
+            currentSortColumn = column;
+            isAscending = true;
+        }
+        refreshFromDatabase();
     }
 
-    private Button createIconButton(String svgPath, String cssClass) {
-        Button btn = new Button();
-        btn.getStyleClass().add("icon-button");
-        SVGPath icon = new SVGPath();
-        icon.setContent(svgPath);
-        icon.getStyleClass().add(cssClass);
-        icon.setScaleX(0.8);
-        icon.setScaleY(0.8);
-        btn.setGraphic(icon);
-        return btn;
-    }
+    @FXML private void handleSortId() { handleSort("id"); }
+    @FXML private void handleSortPrenom() { handleSort("prenom"); }
+    @FXML private void handleSortNom() { handleSort("nom"); }
+    @FXML private void handleSortAge() { handleSort("age"); }
+    @FXML private void handleSortMoyenne() { handleSort("moyenne"); }
 
-    /**
-     * Handles the deletion logic with a confirmation dialog
-     */
     private void handleDelete(Student student) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Supprimer l'étudiant : " + student.getFirstName() + " " + student.getLastName() + " ?");
-        alert.setContentText("Cette action est irréversible.");
-
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Voulez-vous supprimer " + student.getFirstName() + " ?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Suppression");
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            boolean success = studentRequest.DeleteStudent(student.getId());
-            if (success) {
+
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            if (studentRequest.DeleteStudent(student.getId())) {
                 refreshFromDatabase();
-            } else {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Erreur");
-                errorAlert.setHeaderText("La suppression a échoué.");
-                errorAlert.showAndWait();
             }
+        }
+    }
+
+    private void handleEdit(Student student) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/AddStudentPopup.fxml"));
+            Parent root = loader.load();
+
+            AddStudentController controller = loader.getController();
+            controller.setStudent(student);
+            controller.setOnSuccessCallback(this::refreshFromDatabase);
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(studentList.getScene().getWindow());
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

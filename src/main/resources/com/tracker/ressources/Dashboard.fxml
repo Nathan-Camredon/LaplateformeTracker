@@ -16,17 +16,17 @@
         <padding>
             <Insets left="40" right="40" top="10" bottom="10"/>
         </padding>
-        <Label text="ID" prefWidth="60" styleClass="column-header"/>
-        <Label text="Prenom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS"/>
-        <Label text="Nom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS"/>
-        <Label text="Age" prefWidth="60" styleClass="column-header"/>
-        <Label text="Moyenne" prefWidth="80" styleClass="column-header"/>
-        <Region prefWidth="100" /> <!-- Spacer for action icons -->
+        <Label fx:id="idHeader" text="ID" prefWidth="60" styleClass="column-header" onMouseClicked="#handleSortId" style="-fx-cursor: hand;"/>
+        <Label fx:id="prenomHeader" text="Prenom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS" onMouseClicked="#handleSortPrenom" style="-fx-cursor: hand;"/>
+        <Label fx:id="nomHeader" text="Nom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS" onMouseClicked="#handleSortNom" style="-fx-cursor: hand;"/>
+        <Label fx:id="ageHeader" text="Age" prefWidth="60" styleClass="column-header" onMouseClicked="#handleSortAge" style="-fx-cursor: hand;"/>
+        <Label fx:id="moyenneHeader" text="Moyenne" prefWidth="80" styleClass="column-header" onMouseClicked="#handleSortMoyenne" style="-fx-cursor: hand;"/>
+        <Region prefWidth="100" />
     </HBox>
 
     <!-- Content Area with Vertical Separators -->
     <StackPane VBox.vgrow="ALWAYS">
-        <!-- Vertical Lines Overlay (Simulating the Figma look) -->
+        
         <HBox mouseTransparent="true" spacing="10">
             <padding>
                 <Insets left="40" right="40"/>
@@ -41,7 +41,8 @@
         <!-- Scrollable List of Students -->
         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-padding: 0;">
             <VBox fx:id="studentList" spacing="5">
-                <!-- Rows will be added dynamically by StudentController -->
+
+
             </VBox>
         </ScrollPane>
     </StackPane>
