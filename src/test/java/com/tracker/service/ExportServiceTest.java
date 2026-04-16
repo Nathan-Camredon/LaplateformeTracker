@@ -38,6 +38,7 @@ public class ExportServiceTest {
     void testExportStudentsToCSV_NormalData() {
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "Alice", "Wonderland", 20, 16.5));
+        
         students.add(new Student(2, "Bob", "Builder", 22, 14.0));
 
         String result = exportService.exportStudentsToCSV(students);

@@ -58,8 +58,7 @@ public class StudentService {
 
 
             // SQL request with average grade join
-            String request = "SELECT s.*, (SELECT AVG(value) FROM \"Grade\" WHERE studentid = s.id) as avg_grade " +
-                             "FROM \"Student\" s ORDER BY " + colSql + " " + direction;
+            String request = "SELECT s.*, (SELECT AVG(value) FROM \"Grade\" WHERE studentid = s.id) as avg_grade " + "FROM \"Student\" s ORDER BY " + colSql + " " + direction;
 
             // Request execution
             Statement statement = connection.createStatement();
