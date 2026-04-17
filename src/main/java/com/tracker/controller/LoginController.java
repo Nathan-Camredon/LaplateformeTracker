@@ -10,6 +10,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * Controller supervising the JavaFX Login page interactions.
+ * Connects the UI securely with the LoginCheck service.
+ */
 public class LoginController {
 
     @FXML
@@ -20,6 +24,10 @@ public class LoginController {
 
     private LoginCheck loginService = new LoginCheck();
 
+    /**
+     * Processes form inputs and delegates authentication checks to the backing service.
+     * Proceeds to the Main application view upon a successful check.
+     */
     @FXML
     private void handleLogin() {
 
@@ -37,8 +45,7 @@ public class LoginController {
 
                 Stage stage = (Stage) userIdField.getScene().getWindow();
                 Scene scene = new Scene(root, 1000, 700);
-                
-                // On applique le CSS à la nouvelle scène
+
                 String css = getClass().getResource("/com/tracker/css/styles.css").toExternalForm();
                 if (css != null) {
                     scene.getStylesheets().add(css);

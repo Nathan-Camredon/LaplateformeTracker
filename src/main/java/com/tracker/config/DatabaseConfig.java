@@ -4,11 +4,17 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.*;
 import java.net.URI;
 
+/**
+ * Configuration class for managing database connections.
+ * Handles loading environment variables and establishing JDBC connections.
+ */
 public class DatabaseConfig {
     private static final Dotenv dotenv = Dotenv.load();
 
     /**
-     * Se connecte à la base de données PostgreSQL en utilisant l'URL du fichier .env
+     * Establishes a connection to the PostgreSQL database using the environment variable string.
+     * @return Connection a JDBC Connection object
+     * @throws SQLException if a database access error occurs
      */
     public static Connection getConnection() throws SQLException {
         String rawUrl = dotenv.get("DATABASE_URL");
@@ -17,17 +23,15 @@ public class DatabaseConfig {
         }
 
         try {
-            // On prépare l'URL pour la lecture (on retire 'jdbc:' si présent)
+
             String uriString = rawUrl.startsWith("jdbc:") ? rawUrl.substring(5) : rawUrl;
             URI uri = new URI(uriString);
 
-            // On extrait les informations de l'URL
             String host = uri.getHost();
             int port = uri.getPort();
             String path = uri.getPath();
             String userInfo = uri.getUserInfo();
 
-            // Construction de l'URL JDBC standard
             String jdbcUrl = "jdbc:postgresql://" + host + (port != -1 ? ":" + port : "") + path;
 
             if (userInfo != null && userInfo.contains(":")) {
@@ -37,25 +41,24 @@ public class DatabaseConfig {
             return DriverManager.getConnection(jdbcUrl);
 
         } catch (Exception e) {
-            // En cas d'erreur de lecture, on tente une conversion simple
+
             String fallbackUrl = rawUrl.replace("postgresql://", "jdbc:postgresql://");
             return DriverManager.getConnection(fallbackUrl);
         }
     }
 
     /**
-     * Initialise automatiquement les tables si elles n'existent pas encore.
+     * Initializes the database by creating necessary tables if they do not exist
+     * and injecting a default administrator user.
      */
     public static void initializeDatabase() {
-        try (Connection conn = getConnection(); 
-             Statement stmt = conn.createStatement()) {
+        try (Connection conn = getConnection();
+            Statement stmt = conn.createStatement()) {
 
-            // Table des utilisateurs
             stmt.execute("CREATE TABLE IF NOT EXISTS \"User\" (" +
                         "login VARCHAR(255) PRIMARY KEY, " +
                         "password VARCHAR(255) NOT NULL)");
 
-            // Table des étudiants
             stmt.execute("CREATE TABLE IF NOT EXISTS \"Student\" (" +
                         "id SERIAL PRIMARY KEY, " +
                         "first_name VARCHAR(255) NOT NULL, " +
@@ -63,17 +66,15 @@ public class DatabaseConfig {
                         "age INTEGER NOT NULL, " +
                         "email VARCHAR(255) UNIQUE)");
 
-            // Table des notes
             stmt.execute("CREATE TABLE IF NOT EXISTS \"Grade\" (" +
                         "id SERIAL PRIMARY KEY, " +
                         "value INTEGER NOT NULL, " +
                         "subject VARCHAR(255), " +
                         "studentid INTEGER REFERENCES \"Student\"(id) ON DELETE CASCADE)");
 
-            // Ajout d'un utilisateur par défaut si la table est vide
             ResultSet rs = stmt.executeQuery("SELECT count(*) FROM \"User\"");
             if (rs.next() && rs.getInt(1) == 0) {
-                // Mot de passe 'admin' haché en SHA-256
+
                 String hashedAdmin = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
                 stmt.execute("INSERT INTO \"User\" (login, password) VALUES ('admin', '" + hashedAdmin + "')");
                 System.out.println("👤 Utilisateur admin créé par défaut.");

@@ -1,17 +1,30 @@
 package com.tracker.model;
 
+/**
+ * Represents a Student entity in the LaplateformeTracker application.
+ * Holds all relevant student information including dynamic grading logic references.
+ */
 public class Student {
     private int id;
     private String firstName;
     private String lastName;
     private int age;
     private String email;
-    private double average; // This will be calculated from Grades table
+    private double average;
 
-    // Default constructor
+    /**
+     * Empty constructor for creating an empty Student instance.
+     */
     public Student() {}
 
-    // Full constructor
+    /**
+     * Fully parameterized constructor to initialize a new Student.
+     * @param id The unique identifier
+     * @param firstName The student's first name
+     * @param lastName The student's last name
+     * @param age The student's age
+     * @param email The student's email address
+     */
     public Student(int id, String firstName, String lastName, int age, String email) {
         this.id = id;
         this.firstName = firstName;
@@ -20,7 +33,6 @@ public class Student {
         this.email = email;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

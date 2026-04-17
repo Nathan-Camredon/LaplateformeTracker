@@ -14,58 +14,52 @@ import com.tracker.model.GradeRequest;
 import javafx.scene.control.TextField;
 import java.util.List;
 
+/**
+ * Custom JavaFX VBox Component representing a single interactive student row.
+ * Includes expandable dynamic sub-menus for displaying and modulating grades.
+ */
 public class StudentRow extends javafx.scene.layout.VBox {
 
     private boolean isExpanded = false;
     private javafx.scene.layout.VBox detailsArea;
+    private Label avgLabel;
 
+    /**
+     * Generates a new styled student row mapped to a specific student object.
+     * @param student The model data driving this view
+     * @param onEdit A callback executable triggered when the edit button is clicked
+     * @param onDelete A callback executable triggered when the delete button is clicked
+     */
     public StudentRow(Student student, Runnable onEdit, Runnable onDelete) {
         super();
         this.setStyle("-fx-background-color: transparent;");
 
-        // --- Main Row ---
         HBox mainRow = new HBox(10);
         mainRow.setAlignment(Pos.CENTER_LEFT);
         mainRow.setPadding(new Insets(10, 40, 10, 40));
 
-
-
-
-        // Création des colonnes de texte
         Label idLabel = createLabel(String.valueOf(student.getId()), 60);
-        Label fnLabel = createLabel(student.getFirstName(), 120);
-        HBox.setHgrow(fnLabel, Priority.ALWAYS);
-        Label lnLabel = createLabel(student.getLastName(), 120);
-        HBox.setHgrow(lnLabel, Priority.ALWAYS);
+        Label fnLabel = createLabel(student.getFirstName(), 180);
+        Label lnLabel = createLabel(student.getLastName(), 180);
         Label ageLabel = createLabel(String.valueOf(student.getAge()), 60);
-        Label avgLabel = createLabel(String.format("%.2f", student.getAverage()), 80);
+        avgLabel = createLabel(String.format("%.2f", student.getAverage()), 80);
 
-
-
-
-        // Buttons
         HBox actions = new HBox(10);
         actions.setAlignment(Pos.CENTER_RIGHT);
         actions.setPrefWidth(100);
 
         Button editBtn = createIconButton("M3,17.25 V21 H6.75 L17.81,9.94 L14.06,6.19 L3,17.25 M20.71,7.04 L16.96,3.29 L15.13,5.12 L18.88,8.87 L20.71,7.04 Z", "pen-icon");
         editBtn.setOnAction(e -> { e.consume(); onEdit.run(); });
-        
+
         Button deleteBtn = createIconButton("M6,19 c0,1.1 0.9,2 2,2 h8 c1.1,0 2,-0.9 2,-2 V7 H6 v12 z M19,4 h-3.5 l-1,-1 h-5 l-1,1 H5 v2 h14 V4 z", "trash-icon");
         deleteBtn.setOnAction(e -> { e.consume(); onDelete.run(); });
 
         actions.getChildren().addAll(editBtn, deleteBtn);
         mainRow.getChildren().addAll(idLabel, fnLabel, lnLabel, ageLabel, avgLabel, actions);
 
-
-
-
-
-
-        // --- Details Sub-menu (Grades) ---
         detailsArea = new javafx.scene.layout.VBox(5);
-        detailsArea.setPadding(new Insets(10, 40, 10, 100)); // Indented
-        detailsArea.setStyle("-fx-background-color: rgba(255, 255, 255, 0.05); -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1 0 0 0;");
+        detailsArea.setPadding(new Insets(10, 40, 10, 100));
+        detailsArea.setStyle("-fx-background-color: #0b1d35; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1 0 0 0;");
         detailsArea.setVisible(false);
         detailsArea.setManaged(false);
 
@@ -73,21 +67,24 @@ public class StudentRow extends javafx.scene.layout.VBox {
         headerBox.setAlignment(Pos.CENTER_LEFT);
         Label title = new Label("Notes de l'étudiant :");
         title.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
-        
+
         Button addGradeBtn = new Button("+");
         addGradeBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-radius: 5px; -fx-background-radius: 5px;");
         addGradeBtn.setOnAction(e -> showAddGradeForm(student.getId()));
-        
+
         headerBox.getChildren().addAll(title, addGradeBtn);
         detailsArea.getChildren().add(headerBox);
 
-        // Toggle on click
         mainRow.setOnMouseClicked(e -> toggleDetails(student.getId()));
         this.getChildren().addAll(mainRow, detailsArea);
     }
 
+    /**
+     * Injects an interactive sub-form for adding a new grade specific to this student.
+     * @param studentId The unique structural identifier of the attached student
+     */
     private void showAddGradeForm(int studentId) {
-        // Supprime l'ancien formulaire s'il existe déjà
+
         detailsArea.getChildren().removeIf(node -> "addForm".equals(node.getId()));
 
         HBox addForm = new HBox(10);
@@ -110,11 +107,15 @@ public class StudentRow extends javafx.scene.layout.VBox {
                 int val = Integer.parseInt(valueField.getText());
                 String sub = subjectField.getText();
                 if (!sub.isEmpty()) {
-                    new GradeRequest().addGrade(val, sub, studentId);
-                    loadGrades(studentId); // Rafraîchir la liste
+                    if (new GradeRequest().addGrade(val, sub, studentId)) {
+                        loadGrades(studentId);
+                        subjectField.clear();
+                        valueField.clear();
+                        subjectField.requestFocus();
+                    }
                 }
             } catch (NumberFormatException ex) {
-                // Ignore invalid input or display error
+
             }
         });
 
@@ -123,9 +124,14 @@ public class StudentRow extends javafx.scene.layout.VBox {
         cancelBtn.setOnAction(e -> detailsArea.getChildren().remove(addForm));
 
         addForm.getChildren().addAll(subjectField, valueField, saveBtn, cancelBtn);
-        detailsArea.getChildren().add(1, addForm); // Ajoute juste sous le header
+        detailsArea.getChildren().add(1, addForm);
     }
 
+    /**
+     * Expands or collapses the detailed notes menu positioned below the row.
+     * Automatically triggers a database query for grades if expanding.
+     * @param studentId The unique identifier of the attached student
+     */
     private void toggleDetails(int studentId) {
         isExpanded = !isExpanded;
         detailsArea.setVisible(isExpanded);
@@ -136,24 +142,48 @@ public class StudentRow extends javafx.scene.layout.VBox {
         }
     }
 
+    /**
+     * Queries the DB to load and render the student's grades within the active detailed view.
+     * Updates the main row's display average based on fetched entries.
+     * @param studentId The student to filter grades against
+     */
     private void loadGrades(int studentId) {
-        // Enlève l'ancien contenu (sauf le header et l'éventuel form)
+
         detailsArea.getChildren().removeIf(node -> "gradeItem".equals(node.getId()) || "noGrades".equals(node.getId()));
-        
+
         List<Grade> grades = new GradeRequest().getGradesByStudentId(studentId);
-        
+
         if (grades.isEmpty()) {
             Label noGrades = new Label("• Aucune note trouvée.");
             noGrades.setId("noGrades");
             noGrades.setStyle("-fx-text-fill: white;");
             detailsArea.getChildren().add(noGrades);
+            avgLabel.setText("0,00");
         } else {
+            double sum = 0;
             for (Grade g : grades) {
+                sum += g.getValue();
+
+                HBox gradeLine = new HBox(10);
+                gradeLine.setAlignment(Pos.CENTER_LEFT);
+                gradeLine.setId("gradeItem");
+
                 Label gLabel = new Label("• " + g.getSubject() + " : " + g.getValue());
-                gLabel.setId("gradeItem");
                 gLabel.setStyle("-fx-text-fill: white;");
-                detailsArea.getChildren().add(gLabel);
+                gLabel.setPrefWidth(200);
+
+                Button delBtn = new Button("✖");
+                delBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #ff6b6b; -fx-cursor: hand; -fx-font-weight: bold;");
+                delBtn.setOnAction(e -> {
+                    new GradeRequest().deleteGrade(g.getId());
+                    loadGrades(studentId);
+                });
+
+                gradeLine.getChildren().addAll(gLabel, delBtn);
+                detailsArea.getChildren().add(gradeLine);
             }
+            double newAvg = sum / grades.size();
+            avgLabel.setText(String.format("%.2f", newAvg));
         }
     }
 
@@ -163,8 +193,6 @@ public class StudentRow extends javafx.scene.layout.VBox {
         label.setStyle("-fx-text-fill: white;");
         return label;
     }
-
-
 
     private Button createIconButton(String svgPath, String cssClass) {
         Button btn = new Button();

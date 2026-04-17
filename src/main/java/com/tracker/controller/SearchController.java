@@ -8,6 +8,9 @@ import javafx.stage.Stage;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Controller administrating the generic and advanced searching UI popup.
+ */
 public class SearchController {
 
     @FXML
@@ -20,10 +23,17 @@ public class SearchController {
     private StudentService studentService = new StudentService();
     private Consumer<List<Student>> onSearchCallback;
 
+    /**
+     * Assigns a consumer callback which accepts the search results array returned by the service.
+     * @param callback A consumer processing a List of matching Students
+     */
     public void setOnSearchCallback(Consumer<List<Student>> callback) {
         this.onSearchCallback = callback;
     }
 
+    /**
+     * Extracts values from the search fields and delegates evaluation to the StudentService.
+     */
     @FXML
     private void handleSearch() {
         String idStr = idField.getText();
@@ -31,11 +41,11 @@ public class SearchController {
         String lastName = lastNameField.getText();
 
         List<Student> results = studentService.advancedSearch(idStr, firstName, lastName);
-        
+
         if (onSearchCallback != null) {
             onSearchCallback.accept(results);
         }
-        
+
         closePopup();
     }
 

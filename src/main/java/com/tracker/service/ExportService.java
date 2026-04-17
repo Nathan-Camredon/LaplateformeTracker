@@ -3,10 +3,15 @@ package com.tracker.service;
 import com.tracker.model.Student;
 import java.util.List;
 
+/**
+ * Internal service responsible for data exportation capabilities.
+ */
 public class ExportService {
 
     /**
-     * Convert the student list into csv file
+     * Converts a given list of Student objects into a CSV formatted string.
+     * @param students The List of students to export
+     * @return A String containing standard CSV layout with headers
      */
     public String exportStudentsToCSV(List<Student> students) {
         StringBuilder csv = new StringBuilder();
@@ -26,6 +31,11 @@ public class ExportService {
         return csv.toString();
     }
 
+    /**
+     * Helper method to escape potential problematic characters within CSV values.
+     * @param data The raw string parameter
+     * @return An escaped, CSV-compliant string
+     */
     private String escapeCSV(String data) {
         if (data == null) {
             return "";

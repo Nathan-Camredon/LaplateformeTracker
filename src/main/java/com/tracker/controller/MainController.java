@@ -13,6 +13,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * UI Controller responsible for the primary application window.
+ * Manages navigation between major views such as the Dashboard and sets up global modals.
+ */
 public class MainController implements Initializable {
 
     @FXML
@@ -20,28 +24,32 @@ public class MainController implements Initializable {
 
     private StudentController studentController;
 
+    /**
+     * Initializes the standard Dashboard view upon successful login.
+     * @param url The location used to resolve relative paths
+     * @param rb The resources used to localize the root object
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Charge le tableau de bord par défaut au démarrage
+
         loadView("Dashboard.fxml");
-        
+
         if (studentController != null) {
             studentController.refreshFromDatabase();
         }
     }
 
     /**
-     * Ouvre la fenêtre d'ajout d'étudiant.
+     * Handles the opening of the "Add Student" modal popup.
      */
     @FXML
     private void handleAddStudent() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/AddStudentPopup.fxml"));
             Parent root = loader.load();
-            
+
             AddStudentController controller = loader.getController();
-            
-            // On rafraîchit la liste si l'ajout est réussi
+
             controller.setOnSuccessCallback(() -> {
                 if (studentController != null) {
                     studentController.refreshFromDatabase();
@@ -61,17 +69,16 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Ouvre la fenêtre de recherche avancée.
+     * Handles the opening of the "Advanced Search" modal popup.
      */
     @FXML
     private void handleAdvancedSearch() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/SearchPopup.fxml"));
             Parent root = loader.load();
-            
+
             SearchController searchController = loader.getController();
-            
-            // Lie les résultats de recherche au tableau de bord
+
             searchController.setOnSearchCallback(results -> {
                 if (studentController != null) {
                     studentController.refreshList(results);
@@ -91,39 +98,39 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Charge une vue FXML dans la zone centrale de l'application.
+     * Dynamically swaps the central content area with a specified FXML view.
+     * @param fxmlFile The filename of the view to render
      */
     public void loadView(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/" + fxmlFile));
             Node node = loader.load();
-            
+
             if (fxmlFile.equals("Dashboard.fxml")) {
                 this.studentController = loader.getController();
             }
-            
+
             contentArea.getChildren().setAll(node);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     /**
-     * Déconnecte l'utilisateur et retourne à la page de connexion.
+     * Processes user logout logic, returning the user to the Login screen.
      */
     @FXML
     private void handleLogout() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/com/tracker/ressources/Login.fxml"));
             Stage stage = (Stage) contentArea.getScene().getWindow();
-            
-            // On remplace la racine de la scène actuelle par la vue de Login
+
             stage.getScene().setRoot(root);
-            
-            // Optionnel : on peut redimensionner la fenêtre pour le login si besoin
+
             stage.setWidth(1000);
             stage.setHeight(700);
             stage.centerOnScreen();
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }

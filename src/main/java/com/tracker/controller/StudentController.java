@@ -17,6 +17,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller supervising the dynamic list and interactions of Student rows within the Dashboard.
+ * Handles database refreshes, sorting, modifications, and deletions directly on the UI grid.
+ */
 public class StudentController {
 
     @FXML private VBox studentList;
@@ -24,23 +28,28 @@ public class StudentController {
     private StudentRequest studentRequest = new StudentRequest();
     private StudentService studentService = new StudentService();
 
-    // État du tri
     private String currentSortColumn = "id";
     private boolean isAscending = true;
 
     /**
-     * Rafraîchit l'affichage avec la liste triée.
+     * Re-pulls the complete list of students from the database and redraws the UI.
+     * Respects the current UI sort state.
      */
     public void refreshFromDatabase() {
         List<Student> students = studentService.getAllStudents(currentSortColumn, isAscending);
-        
+
         studentList.getChildren().clear();
         for (Student s : students) {
-            // Utilisation du nouveau composant StudentRow
+
             studentList.getChildren().add(new StudentRow(s, () -> handleEdit(s), () -> handleDelete(s)));
         }
     }
 
+    /**
+     * Fully replaces the visual student list using a provided List of Student objects.
+     * Useful for rendering explicit search results or filters without relying on a full database pull.
+     * @param students The List of students to render
+     */
     public void refreshList(List<Student> students) {
         studentList.getChildren().clear();
         for (Student s : students) {
@@ -48,6 +57,11 @@ public class StudentController {
         }
     }
 
+    /**
+     * Internal handler to abstract the sorting logic, automatically toggling ascending/descending
+     * states if the same column is clicked consecutively.
+     * @param column The SQL column name representing the clicked UI header
+     */
     private void handleSort(String column) {
         if (currentSortColumn.equals(column)) {
             isAscending = !isAscending;
@@ -64,6 +78,11 @@ public class StudentController {
     @FXML private void handleSortAge() { handleSort("age"); }
     @FXML private void handleSortMoyenne() { handleSort("moyenne"); }
 
+    /**
+     * Prompts the user for confirmation and deletes the targeted student from the database.
+     * Refreshes the view dynamically upon completion.
+     * @param student The specific Student object to delete
+     */
     private void handleDelete(Student student) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Voulez-vous supprimer " + student.getFirstName() + " ?", ButtonType.YES, ButtonType.NO);
         alert.setTitle("Suppression");
@@ -76,6 +95,10 @@ public class StudentController {
         }
     }
 
+    /**
+     * Spawns the AddStudentPopup configured in "Edit" mode with the target's data.
+     * @param student The target Student object to edit
+     */
     private void handleEdit(Student student) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/AddStudentPopup.fxml"));

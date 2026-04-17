@@ -1,5 +1,8 @@
 package com.tracker.model;
 
+/**
+ * Represents a Grade (Note) obtained by a particular student for a specific subject.
+ */
 public class Grade {
     private int id;
     private int value;

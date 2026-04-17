@@ -8,6 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * UI Controller for the Add and Edit Student popup modal.
+ * Interacts directly with the StudentRequest backend service to persist changes.
+ */
 public class AddStudentController {
 
     @FXML private TextField firstNameField;
@@ -22,25 +26,34 @@ public class AddStudentController {
     private Runnable onSuccessCallback;
     private Student existingStudent;
 
+    /**
+     * Registers a callback to be executed upon a successful creation or modification of a student.
+     * @param callback The Runnable task to execute
+     */
     public void setOnSuccessCallback(Runnable callback) {
         this.onSuccessCallback = callback;
     }
 
     /**
-     * Prépare le formulaire pour l'édition d'un étudiant existant.
+     * Pre-populates the form fields using an existing Student object.
+     * Alters the visual context indicating an "Edit" rather than "Add".
+     * @param student The existing Student object to edit
      */
     public void setStudent(Student student) {
         this.existingStudent = student;
-        
+
         firstNameField.setText(student.getFirstName());
         lastNameField.setText(student.getLastName());
         ageField.setText(String.valueOf(student.getAge()));
         emailField.setText(student.getEmail());
-        
+
         if (titleLabel != null) titleLabel.setText("Modifier l'Étudiant");
         if (submitButton != null) submitButton.setText("Mettre à jour");
     }
 
+    /**
+     * Triggers the saving mechanism, validating the inputs and routing them to the persistence layer.
+     */
     @FXML
     private void handleSave() {
         String firstName = firstNameField.getText();
@@ -75,6 +88,9 @@ public class AddStudentController {
         }
     }
 
+    /**
+     * Closes the active popup window without saving changes.
+     */
     @FXML
     private void handleCancel() {
         closePopup();

@@ -6,30 +6,26 @@ import java.util.List;
 import com.tracker.config.DatabaseConfig;
 import com.tracker.model.Student;
 
-
-
-
-
-
-
-
-
+/**
+ * Service class responsible for advanced retrieval and searching of Student entities.
+ * Abstracts the direct database queries and structures them for the UI.
+ */
 public class StudentService {
 
+    /**
+     * Retrieves all students, optionally sorting them by a specified column.
+     * @param sortBy The database column to sort by (e.g., "id", "first_name", "moyenne")
+     * @param ascending True for ascending order, false for descending
+     * @return A List of sorted Student objects
+     */
     public List<Student> getAllStudents(String sortBy, boolean ascending){
         List<Student> studentsList = new ArrayList<>();
         try {
 
-            // Database connection
             Connection connection = DatabaseConfig.getConnection();
 
-            // Sort direction
             String direction = ascending ? "ASC" : "DESC";
 
-
-
-
-            // Switch for sort column
             String colSql;
             switch (sortBy.toLowerCase()) {
                 case "id":
@@ -55,16 +51,11 @@ public class StudentService {
                     break;
             }
 
-
-
-            // SQL request with average grade join
             String request = "SELECT s.*, (SELECT AVG(value) FROM \"Grade\" WHERE studentid = s.id) as avg_grade " + "FROM \"Student\" s ORDER BY " + colSql + " " + direction;
 
-            // Request execution
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(request);
 
-            // Student data extraction
             while(resultSet.next()) {
                 Student student = new Student();
                 student.setId(resultSet.getInt("id"));
@@ -83,19 +74,19 @@ public class StudentService {
             e.printStackTrace();
         }
         return studentsList;
-        
+
     }
 
-
-
-
-
-
+    /**
+     * Performs a generic fuzzy search matching ID, first name, or last name.
+     * @param search The generalized search string input
+     * @return A List of Student objects matching the criteria
+     */
     public List<Student> searchStudents(String search) {
         List<Student> studentsList = new ArrayList<>();
 
         String pattern = "%" + search + "%";
-        
+
         String query = "SELECT * FROM \"Student\" WHERE " +
                     "first_name LIKE ? OR " +
                     "last_name LIKE ? OR " +
@@ -103,7 +94,6 @@ public class StudentService {
 
         try (Connection conn = DatabaseConfig.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
 
             pstmt.setString(1, pattern);
             pstmt.setString(2, pattern);
@@ -118,7 +108,7 @@ public class StudentService {
                 s.setLastName(rs.getString("last_name"));
                 s.setAge(rs.getInt("age"));
                 s.setEmail(rs.getString("email"));
-                s.setAverage(0.0); 
+                s.setAverage(0.0);
                 studentsList.add(s);
             }
         } catch (SQLException e) {
@@ -129,7 +119,11 @@ public class StudentService {
     }
 
     /**
-     * Advanced Search with multiple optional criteria
+     * Performs an advanced search based on distinct provided fields.
+     * @param idStr The student ID (string format to allow partial matching)
+     * @param firstName Partial or exact first name
+     * @param lastName Partial or exact last name
+     * @return A List of Student objects strictly matching the provided distinct parameters
      */
     public List<Student> advancedSearch(String idStr, String firstName, String lastName) {
         List<Student> studentsList = new ArrayList<>();
@@ -151,7 +145,7 @@ public class StudentService {
 
         try (Connection conn = DatabaseConfig.getConnection();
             PreparedStatement pstmt = conn.prepareStatement(query.toString())) {
-            
+
             for (int i = 0; i < params.size(); i++) {
                 pstmt.setObject(i + 1, params.get(i));
             }

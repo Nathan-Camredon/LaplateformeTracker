@@ -21,8 +21,8 @@
             <Insets left="40" right="40" top="10" bottom="10"/>
         </padding>
         <Label fx:id="idHeader" text="ID" prefWidth="60" styleClass="column-header" onMouseClicked="#handleSortId" style="-fx-cursor: hand;"/>
-        <Label fx:id="prenomHeader" text="Prenom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS" onMouseClicked="#handleSortPrenom" style="-fx-cursor: hand;"/>
-        <Label fx:id="nomHeader" text="Nom" prefWidth="120" styleClass="column-header" HBox.hgrow="ALWAYS" onMouseClicked="#handleSortNom" style="-fx-cursor: hand;"/>
+        <Label fx:id="prenomHeader" text="Prenom" prefWidth="180" styleClass="column-header" onMouseClicked="#handleSortPrenom" style="-fx-cursor: hand;"/>
+        <Label fx:id="nomHeader" text="Nom" prefWidth="180" styleClass="column-header" onMouseClicked="#handleSortNom" style="-fx-cursor: hand;"/>
         <Label fx:id="ageHeader" text="Age" prefWidth="60" styleClass="column-header" onMouseClicked="#handleSortAge" style="-fx-cursor: hand;"/>
         <Label fx:id="moyenneHeader" text="Moyenne" prefWidth="80" styleClass="column-header" onMouseClicked="#handleSortMoyenne" style="-fx-cursor: hand;"/>
         <Region prefWidth="100" />
@@ -36,10 +36,11 @@
                 <Insets left="40" right="40"/>
             </padding>
             <Region prefWidth="60" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
-            <Region prefWidth="120" HBox.hgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
-            <Region prefWidth="120" HBox.hgrow="ALWAYS" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="180" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="180" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
             <Region prefWidth="60" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
             <Region prefWidth="80" style="-fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 1 0 0;"/>
+            <Region prefWidth="100"/>
         </HBox>
 
         <!-- Scrollable List of Students -->
