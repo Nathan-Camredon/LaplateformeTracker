@@ -24,6 +24,8 @@ import java.util.Optional;
 public class StudentController {
 
     @FXML private VBox studentList;
+    private List<Student> displayedStudents;
+
 
     private StudentRequest studentRequest = new StudentRequest();
     private StudentService studentService = new StudentService();
@@ -36,11 +38,10 @@ public class StudentController {
      * Respects the current UI sort state.
      */
     public void refreshFromDatabase() {
-        List<Student> students = studentService.getAllStudents(currentSortColumn, isAscending);
+        this.displayedStudents = studentService.getAllStudents(currentSortColumn, isAscending);
 
         studentList.getChildren().clear();
-        for (Student s : students) {
-
+        for (Student s : displayedStudents) {
             studentList.getChildren().add(new StudentRow(s, () -> handleEdit(s), () -> handleDelete(s)));
         }
     }
@@ -51,10 +52,18 @@ public class StudentController {
      * @param students The List of students to render
      */
     public void refreshList(List<Student> students) {
+        this.displayedStudents = students;
         studentList.getChildren().clear();
         for (Student s : students) {
             studentList.getChildren().add(new StudentRow(s, () -> handleEdit(s), () -> handleDelete(s)));
         }
+    }
+
+    /**
+     * @return The list of students currently displayed in the UI.
+     */
+    public List<Student> getDisplayedStudents() {
+        return displayedStudents;
     }
 
     /**

@@ -98,3 +98,17 @@
 .logout-icon {
     -fx-fill: white;
 }
+.export-button {
+    -fx-background-color: rgba(76, 175, 80, 0.1);
+    -fx-border-color: rgba(76, 175, 80, 0.8);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-style: italic;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.export-button:hover {
+    -fx-background-color: rgba(76, 175, 80, 0.2);
+}

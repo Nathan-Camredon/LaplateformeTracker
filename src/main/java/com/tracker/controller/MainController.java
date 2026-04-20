@@ -9,8 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
+import com.tracker.service.ExportService;
+import com.tracker.model.Student;
+import javafx.scene.control.Alert;
+import java.io.File;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -23,6 +30,7 @@ public class MainController implements Initializable {
     private StackPane contentArea;
 
     private StudentController studentController;
+    private final ExportService exportService = new ExportService();
 
     /**
      * Initializes the standard Dashboard view upon successful login.
@@ -94,6 +102,51 @@ public class MainController implements Initializable {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Triggers the CSV export process.
+     * Opens a file chooser and writes the currently displayed student data to the selected file.
+     */
+    @FXML
+    private void handleExport() {
+        if (studentController == null || studentController.getDisplayedStudents() == null || studentController.getDisplayedStudents().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Export Warning");
+            alert.setHeaderText(null);
+            alert.setContentText("No students currently displayed to export.");
+            alert.showAndWait();
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Exported CSV");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        fileChooser.setInitialFileName("students_export.csv");
+
+        File file = fileChooser.showSaveDialog(contentArea.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                String csvData = exportService.exportStudentsToCSV(studentController.getDisplayedStudents());
+                try (PrintWriter writer = new PrintWriter(file)) {
+                    writer.write(csvData);
+                }
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Export Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Data successfully exported to: " + file.getName());
+                alert.showAndWait();
+
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Export Error");
+                alert.setHeaderText("Failed to save file");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
         }
     }
 
