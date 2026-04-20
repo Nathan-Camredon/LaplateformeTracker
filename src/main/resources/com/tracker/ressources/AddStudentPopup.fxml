@@ -17,27 +17,27 @@
         <Insets top="30" right="40" bottom="30" left="40"/>
     </padding>
 
-    <Label fx:id="titleLabel" text="Ajouter un Étudiant" styleClass="title-label" style="-fx-font-size: 20px;"/>
+    <Label fx:id="titleLabel" text="Add Student" styleClass="title-label" style="-fx-font-size: 20px;"/>
 
     <VBox spacing="10" styleClass="content-container" style="-fx-padding: 20;">
         <VBox spacing="5">
-            <Label text="Prénom" styleClass="column-header"/>
-            <TextField fx:id="firstNameField" promptText="Prénom de l'élève" styleClass="search-button" style="-fx-alignment: center-left;"/>
+            <Label text="First Name" styleClass="column-header"/>
+            <TextField fx:id="firstNameField" promptText="Student's first name" styleClass="search-button" style="-fx-alignment: center-left;"/>
         </VBox>
 
         <VBox spacing="5">
-            <Label text="Nom" styleClass="column-header"/>
-            <TextField fx:id="lastNameField" promptText="Nom de l'élève" styleClass="search-button" style="-fx-alignment: center-left;"/>
+            <Label text="Last Name" styleClass="column-header"/>
+            <TextField fx:id="lastNameField" promptText="Student's last name" styleClass="search-button" style="-fx-alignment: center-left;"/>
         </VBox>
 
         <HBox spacing="15">
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label text="Âge" styleClass="column-header"/>
-                <TextField fx:id="ageField" promptText="Ex: 20" styleClass="search-button" style="-fx-alignment: center-left;"/>
+                <Label text="Age" styleClass="column-header"/>
+                <TextField fx:id="ageField" promptText="E.g. 20" styleClass="search-button" style="-fx-alignment: center-left;"/>
             </VBox>
             <VBox spacing="5" HBox.hgrow="ALWAYS">
                 <Label text="Email" styleClass="column-header"/>
-                <TextField fx:id="emailField" promptText="Ex: morgan@laplateforme.io" styleClass="search-button" style="-fx-alignment: center-left;"/>
+                <TextField fx:id="emailField" promptText="E.g. morgan@laplateforme.io" styleClass="search-button" style="-fx-alignment: center-left;"/>
             </VBox>
         </HBox>
         
@@ -45,8 +45,8 @@
     </VBox>
 
     <HBox spacing="20" alignment="CENTER">
-        <Button fx:id="submitButton" text="Ajouter" onAction="#handleSave" styleClass="plus-button" prefWidth="120"/>
-        <Button text="Annuler" onAction="#handleCancel" styleClass="search-button" prefWidth="120"/>
+        <Button fx:id="submitButton" text="Add" onAction="#handleSave" styleClass="plus-button" prefWidth="120"/>
+        <Button text="Cancel" onAction="#handleCancel" styleClass="search-button" prefWidth="120"/>
     </HBox>
 
 </VBox>

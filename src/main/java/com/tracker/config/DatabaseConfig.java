@@ -19,7 +19,7 @@ public class DatabaseConfig {
     public static Connection getConnection() throws SQLException {
         String rawUrl = dotenv.get("DATABASE_URL");
         if (rawUrl == null) {
-            throw new SQLException("DATABASE_URL est manquante dans le fichier .env");
+            throw new SQLException("DATABASE_URL is missing in the .env file");
         }
 
         try {
@@ -77,13 +77,13 @@ public class DatabaseConfig {
 
                 String hashedAdmin = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
                 stmt.execute("INSERT INTO \"User\" (login, password) VALUES ('admin', '" + hashedAdmin + "')");
-                System.out.println("👤 Utilisateur admin créé par défaut.");
+                System.out.println("👤 Admin user created by default.");
             }
 
-            System.out.println("✅ Base de données prête.");
+            System.out.println("✅ Database ready.");
 
         } catch (SQLException e) {
-            System.err.println("❌ Erreur d'initialisation : " + e.getMessage());
+            System.err.println("❌ Initialization error: " + e.getMessage());
         }
     }
 }

@@ -73,10 +73,10 @@ public class StudentController {
     }
 
     @FXML private void handleSortId() { handleSort("id"); }
-    @FXML private void handleSortPrenom() { handleSort("prenom"); }
-    @FXML private void handleSortNom() { handleSort("nom"); }
+    @FXML private void handleSortPrenom() { handleSort("first_name"); }
+    @FXML private void handleSortNom() { handleSort("last_name"); }
     @FXML private void handleSortAge() { handleSort("age"); }
-    @FXML private void handleSortMoyenne() { handleSort("moyenne"); }
+    @FXML private void handleSortMoyenne() { handleSort("grade"); }
 
     /**
      * Prompts the user for confirmation and deletes the targeted student from the database.
@@ -84,8 +84,8 @@ public class StudentController {
      * @param student The specific Student object to delete
      */
     private void handleDelete(Student student) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Voulez-vous supprimer " + student.getFirstName() + " ?", ButtonType.YES, ButtonType.NO);
-        alert.setTitle("Suppression");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete " + student.getFirstName() + " ?", ButtonType.YES, ButtonType.NO);
+        alert.setTitle("Deletion");
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.YES) {

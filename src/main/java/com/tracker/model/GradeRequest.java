@@ -12,8 +12,8 @@ public class GradeRequest {
 
     /**
      * Retrieves all grades associated with a specific student by their ID.
-     * @param studentId The ID of the target student
-     * @return A List of Grade objects corresponding to the student
+     * The ID of the target student
+     * Return A List of Grade objects corresponding to the student
      */
     public List<Grade> getGradesByStudentId(int studentId) {
         List<Grade> grades = new ArrayList<>();
@@ -44,7 +44,7 @@ public class GradeRequest {
      * @param value The grade value (typically 0-20)
      * @param subject The subject or course name corresponding to the grade
      * @param studentId The ID of the student receiving this grade
-     * @return boolean True if insertion was successful, false otherwise
+     * Return boolean True if insertion was successful, false otherwise
      */
     public boolean addGrade(int value, String subject, int studentId) {
         String sql = "INSERT INTO \"Grade\" (value, subject, studentid) VALUES (?, ?, ?)";
@@ -65,8 +65,8 @@ public class GradeRequest {
 
     /**
      * Deletes a specific grade from the database.
-     * @param gradeId The unique ID of the grade to be removed
-     * @return boolean True if deletion was successful, false otherwise
+     * The unique ID of the grade to be removed
+     * True if deletion was successful, false otherwise
      */
     public boolean deleteGrade(int gradeId) {
         String sql = "DELETE FROM \"Grade\" WHERE id = ?";

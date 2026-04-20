@@ -29,7 +29,7 @@
             <Region HBox.hgrow="ALWAYS" />
 
             <!-- Action buttons -->
-            <Button text="Recherche avancée" onAction="#handleAdvancedSearch" styleClass="search-button"/>
+            <Button text="Advanced Search" onAction="#handleAdvancedSearch" styleClass="search-button"/>
             <Button text="+" onAction="#handleAddStudent" styleClass="plus-button" prefWidth="40" prefHeight="40"/>
         </HBox>
     </top>

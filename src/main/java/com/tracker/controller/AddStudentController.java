@@ -47,8 +47,8 @@ public class AddStudentController {
         ageField.setText(String.valueOf(student.getAge()));
         emailField.setText(student.getEmail());
 
-        if (titleLabel != null) titleLabel.setText("Modifier l'Étudiant");
-        if (submitButton != null) submitButton.setText("Mettre à jour");
+        if (titleLabel != null) titleLabel.setText("Edit Student");
+        if (submitButton != null) submitButton.setText("Update");
     }
 
     /**
@@ -62,7 +62,7 @@ public class AddStudentController {
         String email = emailField.getText();
 
         if (firstName.isEmpty() || lastName.isEmpty() || ageStr.isEmpty() || email.isEmpty()) {
-            showError("Merci de remplir tous les champs !");
+            showError("Please fill all fields!");
             return;
         }
 
@@ -80,11 +80,11 @@ public class AddStudentController {
                 if (onSuccessCallback != null) onSuccessCallback.run();
                 closePopup();
             } else {
-                showError("Erreur lors de l'enregistrement.");
+                showError("Error during saving.");
             }
 
         } catch (NumberFormatException e) {
-            showError("L'âge doit être un nombre.");
+            showError("Age must be a number.");
         }
     }
 

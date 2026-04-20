@@ -12,8 +12,8 @@ public class StatsController {
 
     /**
      * Processes a sequence of grades to compute the student's mathematical mean.
-     * @param grades A generic list of floating point elements
-     * @return The computed average as a double
+     * A generic list of floating point elements
+     * The computed average as a double
      */
     public double handleCalculateAverage(List<Double> grades) {
         return statisticService.calculateAverage(grades);

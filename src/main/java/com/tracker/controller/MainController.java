@@ -57,7 +57,7 @@ public class MainController implements Initializable {
             });
 
             Stage stage = new Stage();
-            stage.setTitle("Ajouter un Étudiant");
+            stage.setTitle("Add Student");
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(contentArea.getScene().getWindow());
             stage.setScene(new Scene(root));
@@ -86,7 +86,7 @@ public class MainController implements Initializable {
             });
 
             Stage stage = new Stage();
-            stage.setTitle("Recherche Avancée");
+            stage.setTitle("Advanced Search");
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(contentArea.getScene().getWindow());
             stage.setScene(new Scene(root));

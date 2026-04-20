@@ -112,7 +112,7 @@ public class StudentService {
                 studentsList.add(s);
             }
         } catch (SQLException e) {
-            System.err.println("Erreur recherche : " + e.getMessage());
+            System.err.println("Search error: " + e.getMessage());
             e.printStackTrace();
         }
         return studentsList;

@@ -17,7 +17,7 @@ public class StudentRequest {
      * @param lastName The student's last name
      * @param age The student's age
      * @param email The student's email
-     * @return boolean True if creation was successful, false otherwise
+     * Return boolean True if creation was successful, false otherwise
      */
     public boolean CreateStudent(String firstName, String lastName, int age, String email) {
         String sql = "INSERT INTO \"Student\" (first_name, last_name, age, email) VALUES (?, ?, ?, ?)";
@@ -39,8 +39,8 @@ public class StudentRequest {
 
     /**
      * Deletes a student from the database.
-     * @param id The ID of the student to delete
-     * @return boolean True if deletion was successful, false otherwise
+     * The ID of the student to delete
+     * Return boolean True if deletion was successful, false otherwise
      */
     public boolean DeleteStudent(int id) {
         String sql = "DELETE FROM \"Student\" WHERE id = ?";
@@ -63,7 +63,7 @@ public class StudentRequest {
      * @param lastName The updated last name
      * @param age The updated age
      * @param email The updated email string
-     * @return boolean True if the student was successfully updated
+     * Return boolean True if the student was successfully updated
      */
     public boolean Update(int id, String firstName, String lastName, int age, String email) {
         String sql = "UPDATE \"Student\" SET first_name = ?, last_name = ?, age = ?, email = ? WHERE id = ?";
@@ -86,7 +86,7 @@ public class StudentRequest {
 
     /**
      * Retrieves all students from the database alongside their computed average grades.
-     * @return A List of Student objects sorted by their ID in ascending order.
+     * Return A List of Student objects sorted by their ID in ascending order.
      */
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();

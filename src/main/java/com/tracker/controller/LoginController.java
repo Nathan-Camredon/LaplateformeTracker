@@ -37,7 +37,7 @@ public class LoginController {
         boolean success = loginService.checkLogin(login, password);
 
         if (success) {
-            System.out.println("Connexion success !");
+            System.out.println("Login success !");
 
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/tracker/ressources/MainView.fxml"));
@@ -59,7 +59,7 @@ public class LoginController {
             }
 
         } else {
-            System.out.println("Connexion failure");
+            System.out.println("Login failure");
         }
     }
 }

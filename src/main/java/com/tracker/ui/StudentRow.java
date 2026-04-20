@@ -65,7 +65,7 @@ public class StudentRow extends javafx.scene.layout.VBox {
 
         HBox headerBox = new HBox(10);
         headerBox.setAlignment(Pos.CENTER_LEFT);
-        Label title = new Label("Notes de l'étudiant :");
+        Label title = new Label("Student Grades:");
         title.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
 
         Button addGradeBtn = new Button("+");
@@ -93,14 +93,14 @@ public class StudentRow extends javafx.scene.layout.VBox {
         addForm.setPadding(new Insets(5, 0, 5, 0));
 
         TextField subjectField = new TextField();
-        subjectField.setPromptText("Matière (ex: Math)");
+        subjectField.setPromptText("Subject (e.g. Math)");
         subjectField.setPrefWidth(120);
 
         TextField valueField = new TextField();
-        valueField.setPromptText("Note (0-20)");
+        valueField.setPromptText("Grade (0-20)");
         valueField.setPrefWidth(80);
 
-        Button saveBtn = new Button("Sauvegarder");
+        Button saveBtn = new Button("Save");
         saveBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
         saveBtn.setOnAction(e -> {
             try {
@@ -119,7 +119,7 @@ public class StudentRow extends javafx.scene.layout.VBox {
             }
         });
 
-        Button cancelBtn = new Button("Annuler");
+        Button cancelBtn = new Button("Cancel");
         cancelBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 3px;");
         cancelBtn.setOnAction(e -> detailsArea.getChildren().remove(addForm));
 
@@ -154,7 +154,7 @@ public class StudentRow extends javafx.scene.layout.VBox {
         List<Grade> grades = new GradeRequest().getGradesByStudentId(studentId);
 
         if (grades.isEmpty()) {
-            Label noGrades = new Label("• Aucune note trouvée.");
+            Label noGrades = new Label("• No grades found.");
             noGrades.setId("noGrades");
             noGrades.setStyle("-fx-text-fill: white;");
             detailsArea.getChildren().add(noGrades);

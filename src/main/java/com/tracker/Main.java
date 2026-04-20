@@ -16,8 +16,8 @@ public class Main extends Application {
 
     /**
      * JavaFX start method called once the system is ready to render UI.
-     * @param stage The primary stage assigned to this application
-     * @throws IOException If the designated FXML views fail to load
+     * The primary stage assigned to this application
+     * If the designated FXML views fail to load
      */
     @Override
     public void start(Stage stage) throws IOException {
